@@ -30,7 +30,7 @@ server:
 #  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
-      port: 8077
+      port: 2020
  #  - type: https
   #    port: 8443
  #     keyStorePath: example.keystore
@@ -50,7 +50,7 @@ server:
 #      keyStorePath: example.keystore
 #      keyStorePassword: example
  #     validateCerts: false
- 
+
 
 # Logging settings.
 

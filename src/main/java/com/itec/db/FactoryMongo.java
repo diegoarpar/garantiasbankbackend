@@ -32,45 +32,68 @@ public class FactoryMongo {
     private MongoClient mongoClient =null;
     private DB database =null ;
     private DBCursor curs;
+
     DBMongo dbP= new DBMongo();
+
     public FactoryMongo() {
     }
-   
-    
-    public DBCollection getCollection(String name, String user, String pass, String url, String dataBase){
+
+    public MongoClient getMongoClient(String user, String pass, String url, String dataBase){
         if(mongoClient==null){
             //mongoClient = new MongoClient(new MongoClientURI("mongodb://"+MONGO_SERVER));
             //mongoClient = new MongoClient(new MongoClientURI("mongodb://certi:Certi123@10.130.186.221:27017/?authSource=reportestelefonica&authMechanism=MONGODB-CR"));
             mongoClient = new MongoClient(new MongoClientURI("mongodb://"+user+":"+pass+"@"+url+":27017/?authSource="+dataBase+"&authMechanism=MONGODB-CR"));
         }
-        if(database==null){
-            //database=mongoClient.getDB("reportestelefonica");
-            //database=mongoClient.getDB("SWD_DB");
-            database=mongoClient.getDB(dataBase);
+        return mongoClient;
+    }
+
+    public DB getDatabase(String dataBase){
+        if(mongoClient==null){
+            if(database==null){
+                //database=mongoClient.getDB("reportestelefonica");
+                //database=mongoClient.getDB("SWD_DB");
+                database=mongoClient.getDB(dataBase);
+            }
         }
+        return database;
+    }
+
+
+    public DBCollection getCollection(String name, String user, String pass, String url, String dataBase){
+
+        getMongoClient(user,pass,url,dataBase);
+
+        getDatabase(dataBase);
+
         switch (name){
             case COLLECTION_GARANTIAS:
-                    return database.getCollection(name);
-            default: 
-                     break;
+                return database.getCollection(name);
+            default:
+                break;
         }
-        
+
         return database.getCollection(name);
-        }
-        
-        public void insertGarantias(String c){
-            
-            dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
-            
-        }
-        public void actualizarGarantias(String c){
-            
-            dbP.updateGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
-            
-        }
-        public List<DBObject> getGarantias(HashMap criterial){
-            
-            return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
-            
-        }
+    }
+
+    public void insertGarantias(String c){
+
+        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
+    public void actualizarGarantias(String c){
+
+        dbP.updateGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
+    public List<DBObject> getGarantias(HashMap criterial){
+
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+
+    }
+
+    public List<DBObject> searchMetadata(String criterial){
+        getMongoClient(USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
+        return dbP.getListMetadata(database, criterial);
+
+    }
 }

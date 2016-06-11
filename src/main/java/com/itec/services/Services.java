@@ -31,13 +31,13 @@ import javax.ws.rs.core.MediaType;
  *
  * @author iTech-Pc
  */
-    @Path("/garantias")
+@Path("/garantias")
 @Produces(MediaType.APPLICATION_JSON)
 public class Services {
-    
+
     FactoryMongo f = new FactoryMongo();
         HashMap<String, String> criterial= new HashMap<>();
-        
+
      @POST
      @Consumes(MediaType.APPLICATION_JSON)
      @Path("/insertGarantias")
@@ -47,7 +47,7 @@ public class Services {
             BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
             String read;
             while((read=br.readLine()) != null) {
-                stringBuilder.append(read);   
+                stringBuilder.append(read);
             }
             System.out.println("PARAMETRO \n\n"+stringBuilder.toString()+"\n\n");
             br.close();
@@ -63,7 +63,7 @@ public class Services {
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
         String read;
         while((read=br.readLine()) != null) {
-            stringBuilder.append(read);   
+            stringBuilder.append(read);
         }
         br.close();
         f.actualizarGarantias(stringBuilder.toString());
@@ -86,10 +86,10 @@ public class Services {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmssmmmm'Z'", Locale.US);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
            dateFormat.format(d);
-           
+
         return "[{\"number\":\""+dateFormat.format(d)+"\"}]";
     }
-    
+
     private void fillCriterialFromString( String queryString){
         criterial.clear();
         if(queryString!=null)
@@ -98,6 +98,6 @@ public class Services {
                 criterial.put(split.split("=")[0], split.split("=")[1]);
             }
         }
-         
+
     }
 }

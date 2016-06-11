@@ -7,13 +7,7 @@ package com.itec.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itec.pojo.Category;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.mongodb.util.JSON;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,19 +28,19 @@ import org.bson.types.ObjectId;
 
 public class DBMongo {
     public String insertGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
-    
+
         BasicDBList documentList =(BasicDBList) JSON.parse(c);
         BasicDBObject document;
         for (Object object : documentList) {
             document=(BasicDBObject) object;
             collection.insert(document);
         }
-        
-        
+
+
     return "Insertado";
     }
     public String updateGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
-    
+
         BasicDBList documentList =(BasicDBList) JSON.parse(c);
         BasicDBObject document ;
         BasicDBObject searchQuery2  = new BasicDBObject();
@@ -55,13 +49,13 @@ public class DBMongo {
             document=(BasicDBObject) object;
             //collection.update(searchQuery2.append("_id", document.get("_id")),document);
              _id=(BasicDBObject) document.get("_id");
-             ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter")); 
+             ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
              searchQuery2.append("_id", o);
              document.remove("_id");
              collection.remove(searchQuery2);
             collection.insert(document);
         }
-        
+
     return "actualizado";
     }
     public List<DBObject> getGarantiasCriterial(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
@@ -70,17 +64,25 @@ public class DBMongo {
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            
+
             searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
-            it.remove(); 
+            it.remove();
         }
-         
+
         //BasicDBObject searchQuery2  = new BasicDBObject();
         curs=collection.find(searchQuery2);
+
         while(curs.hasNext()) {
                 DBObject o = curs.next();
                 data.add(o);
             }
     return data;
+    }
+
+    public List getListMetadata(DB database, String criterial){
+        final DBObject command = new BasicDBObject();
+        command.put("eval", criterial);
+        CommandResult result = database.command(command);
+        return new ArrayList<>();
     }
 }
