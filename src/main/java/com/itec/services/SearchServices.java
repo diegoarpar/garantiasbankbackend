@@ -24,15 +24,14 @@ import java.util.*;
  *
  * @author iTech-Pc
  */
-@Path("/search")
+@Path("/garantias/search")
 @Produces(MediaType.APPLICATION_JSON)
 public class SearchServices {
 
     FactoryMongo f = new FactoryMongo();
-        HashMap<String, String> criterial= new HashMap<>();
 
     /**
-    var mapReduce = function(){
+    function lines(){
         var mr = db.runCommand({
           "mapreduce" : "garantias",
           "map" : function() {

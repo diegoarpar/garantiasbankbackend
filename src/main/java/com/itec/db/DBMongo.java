@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import org.adrianwalker.multilinestring.Multiline;
 import org.bson.types.ObjectId;
 
 /**
@@ -79,10 +81,30 @@ public class DBMongo {
     return data;
     }
 
-    public List getListMetadata(DB database, String criterial){
-        final DBObject command = new BasicDBObject();
-        command.put("eval", criterial);
-        CommandResult result = database.command(command);
-        return new ArrayList<>();
+    /**
+    function(){
+        for (var key in this) { emit(key, null);}
+     }
+     */
+    @Multiline
+    private static String map;
+
+
+
+    /**
+  function(key, stuff) {
+            for (var key in this) { return null;}
+          }
+     */
+    @Multiline
+    private static String reduce;
+
+    public List getListMetadata(DBCollection dbCollection, DB dataBase,  String criterial){
+        MapReduceCommand cmd = new MapReduceCommand(dbCollection, map, reduce,
+            "garantias_keys" , MapReduceCommand.OutputType.INLINE, null);
+        MapReduceOutput out = dbCollection.mapReduce(cmd);
+        DBCollection dbCollection1 = dataBase.getCollection("garantias_keys");
+        ArrayList dbCollectionLista = (ArrayList)dbCollection1.distinct("_id");
+        return dbCollectionLista;
     }
 }

@@ -48,7 +48,7 @@ public class FactoryMongo {
     }
 
     public DB getDatabase(String dataBase){
-        if(mongoClient==null){
+        if(mongoClient!=null){
             if(database==null){
                 //database=mongoClient.getDB("reportestelefonica");
                 //database=mongoClient.getDB("SWD_DB");
@@ -93,7 +93,11 @@ public class FactoryMongo {
 
     public List<DBObject> searchMetadata(String criterial){
         getMongoClient(USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
-        return dbP.getListMetadata(database, criterial);
+        getDatabase(DATA_BASE_GARANTIAS);
+        DBCollection dbCollection =
+                getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],
+                        USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
+        return dbP.getListMetadata(dbCollection, database, criterial);
 
     }
 }
