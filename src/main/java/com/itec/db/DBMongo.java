@@ -5,23 +5,12 @@
  */
 package com.itec.db;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itec.pojo.Category;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-
 import org.adrianwalker.multilinestring.Multiline;
 import org.bson.types.ObjectId;
+
+import java.util.*;
 
 /**
  *

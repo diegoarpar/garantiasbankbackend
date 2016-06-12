@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 /**
  *
@@ -55,14 +56,14 @@ public class Garantias extends  Application<ConfigurationExample> {
         e.jersey().register(db);
         e.jersey().register(searchServices);
 
-        /*e.jersey().register(new AuthDynamicFeature(
+        e.jersey().register(new AuthDynamicFeature(
         new OAuthCredentialAuthFilter.Builder<User>()
             .setAuthenticator(new Autenticator())
             .setAuthorizer(new Autorization())
             .setPrefix("Bearer")
             .buildAuthFilter()));
-          */
 
+        e.jersey().register(RolesAllowedDynamicFeature.class);
     }
 }
 

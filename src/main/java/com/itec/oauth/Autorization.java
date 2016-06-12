@@ -23,6 +23,7 @@ public class Autorization implements Authorizer<User> {
 
     @Override
     public boolean authorize(User u, String role) {
+        System.out.println(role);
         FactoryMongo  f= new FactoryMongo();
          String token = UUID.randomUUID().toString();
          Token t = new Token();

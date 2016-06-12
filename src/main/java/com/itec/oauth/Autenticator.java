@@ -12,6 +12,8 @@ import com.itec.pojo.User;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+
 /**
  *
  * @author iTech-Pc
@@ -19,6 +21,11 @@ import javax.ws.rs.core.Response;
 public class Autenticator implements Authenticator<String, User>{
     @Override
     public Optional<User> authenticate(String token) throws AuthenticationException {
+        try {
+            CallToken.isValidToken(token);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         FactoryMongo  f= new FactoryMongo();
         Token t = new Token();
         t.setToken(token);

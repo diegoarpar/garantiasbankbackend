@@ -5,6 +5,7 @@
 package com.itec.services;
 
 import com.itec.db.FactoryMongo;
+import com.itec.oauth.CallToken;
 import com.mongodb.DBObject;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,18 +40,18 @@ public class Services {
     FactoryMongo f = new FactoryMongo();
         HashMap<String, String> criterial= new HashMap<>();
 
+     @RolesAllowed("ADMIN")
      @POST
      @Consumes(MediaType.APPLICATION_JSON)
      @Path("/insertGarantias")
-     @PermitAll
-        public String insertDigitalizacionValues(@Context HttpServletRequest req) throws IOException {
+
+        public String insertGarantias(@Context HttpServletRequest req) throws IOException {
             StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
             String read;
             while((read=br.readLine()) != null) {
                 stringBuilder.append(read);
             }
-            System.out.println("PARAMETRO \n\n"+stringBuilder.toString()+"\n\n");
             br.close();
             f.insertGarantias(stringBuilder.toString());
             return  "FIRMANDO";
@@ -80,8 +82,9 @@ public class Services {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/getNumber")
-    @PermitAll
+    @RolesAllowed("DIEGOROLE")
     public  String getNumber() throws IOException {
+
         Date d = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmssmmmm'Z'", Locale.US);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
