@@ -91,7 +91,7 @@ public class FactoryMongo {
 
     }
 
-    public List<DBObject> searchMetadata(String criterial){
+    public List<DBObject> getMetadata(String criterial){
         getMongoClient(USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
         getDatabase(DATA_BASE_GARANTIAS);
         DBCollection dbCollection =

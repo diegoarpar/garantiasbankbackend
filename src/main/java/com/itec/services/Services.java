@@ -101,6 +101,5 @@ public class Services {
                 criterial.put(split.split("=")[0], split.split("=")[1]);
             }
         }
-
     }
 }

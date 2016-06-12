@@ -7,8 +7,11 @@ package com.itec.services;
 import com.itec.db.FactoryMongo;
 import com.mongodb.DBObject;
 import org.adrianwalker.multilinestring.Multiline;
+import sun.misc.IOUtils;
+
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -16,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -50,9 +54,17 @@ public class SearchServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/getMetadata")
-    @PermitAll
-    public  List<DBObject> searchMetaData() throws IOException {
-        return f.searchMetadata(searchMetaData);
+    public  List<DBObject> getMetaData() throws IOException {
+        return f.getMetadata(searchMetaData);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/searchWithMetadata")
+    public String searchWithMetData(String jsonRequest) throws IOException {
+
+
+        return  "FIRMANDO";
     }
 
 }
