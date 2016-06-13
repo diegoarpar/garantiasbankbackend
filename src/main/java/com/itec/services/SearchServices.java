@@ -5,6 +5,7 @@
 package com.itec.services;
 
 import com.itec.db.FactoryMongo;
+import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.DBObject;
 import org.adrianwalker.multilinestring.Multiline;
 import sun.misc.IOUtils;
@@ -61,10 +62,9 @@ public class SearchServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/searchWithMetadata")
-    public String searchWithMetData(String jsonRequest) throws IOException {
-
-
-        return  "FIRMANDO";
+    public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> queryString) throws IOException {
+        return f.searchWithMetadata(queryString);
+        //return null;
     }
 
 }

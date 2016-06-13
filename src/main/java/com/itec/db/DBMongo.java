@@ -5,6 +5,7 @@
  */
 package com.itec.db;
 
+import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import org.adrianwalker.multilinestring.Multiline;
@@ -49,6 +50,7 @@ public class DBMongo {
 
     return "actualizado";
     }
+
     public List<DBObject> getGarantiasCriterial(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
         List<DBObject> data= new ArrayList<>();
         BasicDBObject searchQuery2  = new BasicDBObject();
@@ -67,7 +69,7 @@ public class DBMongo {
                 DBObject o = curs.next();
                 data.add(o);
             }
-    return data;
+        return data;
     }
 
     /**
@@ -96,4 +98,31 @@ public class DBMongo {
         ArrayList dbCollectionLista = (ArrayList)dbCollection1.distinct("_id");
         return dbCollectionLista;
     }
+
+    public List<DBObject> searchMetadata(DBCollection collection, ArrayList<HashMapKeyValue> criterial){
+        List<DBObject> data= new ArrayList<>();
+        BasicDBObject andQuery = new BasicDBObject();
+        List<BasicDBObject> searchQuery2  =  new ArrayList<BasicDBObject>();
+        DBCursor curs;
+        if(criterial.size()>0) {
+            for (HashMapKeyValue hashMapKeyValue : criterial) {
+                searchQuery2.add(new BasicDBObject(hashMapKeyValue.getKey(), hashMapKeyValue.getValue()));
+            }
+            if (criterial.size() > 1) {
+                andQuery.put("$and", searchQuery2);
+            }
+            curs = collection.find(andQuery);
+        }
+        else{
+            curs = collection.find();
+        }
+
+         while (curs.hasNext()) {
+            DBObject o = curs.next();
+            data.add(o);
+        }
+        return data;
+
+    }
+
 }

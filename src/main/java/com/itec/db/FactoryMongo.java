@@ -5,16 +5,15 @@
  */
 package com.itec.db;
 
-import com.itec.pojo.Category;
-import com.itec.pojo.Product;
-import com.itec.pojo.Token;
-import com.itec.pojo.User;
+import com.itec.pojo.*;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -100,4 +99,13 @@ public class FactoryMongo {
         return dbP.getListMetadata(dbCollection, database, criterial);
 
     }
+
+    public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial){
+        DBCollection dbCollection =
+                getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],
+                        USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
+        return dbP.searchMetadata(dbCollection, criterial);
+
+    }
+
 }
