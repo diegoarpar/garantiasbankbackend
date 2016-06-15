@@ -8,6 +8,7 @@ import com.itec.configuration.ConfigurationExample;
 import com.itec.oauth.Autenticator;
 import com.itec.oauth.Autorization;
 import com.itec.pojo.User;
+import com.itec.services.ConfigServices;
 import com.itec.services.SearchServices;
 import com.itec.services.Services;
 import io.dropwizard.Application;
@@ -53,8 +54,10 @@ public class Garantias extends  Application<ConfigurationExample> {
                                     filter.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
         final Services db = new Services();
         final SearchServices searchServices = new SearchServices();
+        final ConfigServices configServices = new ConfigServices();
         e.jersey().register(db);
         e.jersey().register(searchServices);
+        e.jersey().register(configServices);
 
         e.jersey().register(new AuthDynamicFeature(
         new OAuthCredentialAuthFilter.Builder<User>()

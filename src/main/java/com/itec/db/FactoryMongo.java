@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class FactoryMongo {
     private static final String COLLECTION_GARANTIAS= "garantias";
+    private static final String COLLECTION_GARANTIAS_FIELDS= "garantias_fields";
     private static final String USER_PASS_GARANTIAS= "certi:certi123";
     private static final String URL_GARANTIAS= "localhost";
     private static final String DATA_BASE_GARANTIAS= "garantiasdb";
@@ -89,7 +90,16 @@ public class FactoryMongo {
         return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
 
     }
+    public List<DBObject> getGarantiasFields(HashMap criterial){
 
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+
+    }
+    public void insertGarantiasFields(String c){
+
+        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
     public List<DBObject> getMetadata(String criterial){
         getMongoClient(USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
         getDatabase(DATA_BASE_GARANTIAS);
