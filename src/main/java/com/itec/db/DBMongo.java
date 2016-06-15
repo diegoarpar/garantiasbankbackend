@@ -105,13 +105,17 @@ public class DBMongo {
         List<BasicDBObject> searchQuery2  =  new ArrayList<BasicDBObject>();
         DBCursor curs;
         if(criterial.size()>0) {
-            for (HashMapKeyValue hashMapKeyValue : criterial) {
-                searchQuery2.add(new BasicDBObject(hashMapKeyValue.getKey(), hashMapKeyValue.getValue()));
-            }
             if (criterial.size() > 1) {
+                for (HashMapKeyValue hashMapKeyValue : criterial) {
+                    searchQuery2.add(new BasicDBObject(hashMapKeyValue.getKey(), hashMapKeyValue.getValue()));
+                }
                 andQuery.put("$and", searchQuery2);
+                curs = collection.find(andQuery);
             }
-            curs = collection.find(andQuery);
+            else {
+                BasicDBObject basicDBObject = new BasicDBObject(criterial.get(0).getKey(), criterial.get(0).getValue());
+                curs = collection.find(basicDBObject);
+            }
         }
         else{
             curs = collection.find();
