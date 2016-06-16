@@ -24,6 +24,7 @@ import java.util.List;
 public class FactoryMongo {
     private static final String COLLECTION_GARANTIAS= "garantias";
     private static final String COLLECTION_GARANTIAS_FIELDS= "garantias_fields";
+    private static final String COLLECTION_GARANTIAS_PARAMETRICS_VALUES= "garantias_parametrics_values";
     private static final String USER_PASS_GARANTIAS= "certi:certi123";
     private static final String URL_GARANTIAS= "localhost";
     private static final String DATA_BASE_GARANTIAS= "garantiasdb";
@@ -98,6 +99,26 @@ public class FactoryMongo {
     public void insertGarantiasFields(String c){
 
         dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
+    public void deleteGarantiasFields(String c){
+
+        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
+    public List<DBObject> getGarantiasParametricValues(HashMap criterial){
+
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+
+    }
+    public void insertGarantiasParametricValues(String c){
+
+        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+
+    }
+    public void deleteParametricValues(String c){
+
+        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
 
     }
     public List<DBObject> getMetadata(String criterial){

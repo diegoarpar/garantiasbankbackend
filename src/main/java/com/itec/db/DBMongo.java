@@ -50,6 +50,22 @@ public class DBMongo {
 
     return "actualizado";
     }
+    public String removeGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
+
+        BasicDBList documentList =(BasicDBList) JSON.parse(c);
+        BasicDBObject document ;
+        BasicDBObject searchQuery2  = new BasicDBObject();
+        BasicDBObject _id;
+        for (Object object : documentList) {
+            document=(BasicDBObject) object;
+            _id=(BasicDBObject) document.get("_id");
+            ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
+            searchQuery2.append("_id", o);
+            collection.remove(searchQuery2);
+        }
+
+        return "eliminado";
+    }
 
     public List<DBObject> getGarantiasCriterial(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
         List<DBObject> data= new ArrayList<>();
