@@ -40,9 +40,9 @@ public class ConfigServices {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/garantias-field")
+    @Path("/garantias-field/{id}")
     @PermitAll
-    public String removeGarantiasFiled(@Context HttpServletRequest req) throws IOException {
+    public String removeGarantiasFiled(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         fillCriterialFromString(req.getQueryString());
         fm.deleteGarantiasFields(criterial);
@@ -60,7 +60,7 @@ public class ConfigServices {
             stringBuilder.append(read);
         }
         br.close();
-        fm.insertGarantias(stringBuilder.toString());
+        fm.insertGarantiasFields(stringBuilder.toString());
         return  "FIRMANDO";
     }
 
