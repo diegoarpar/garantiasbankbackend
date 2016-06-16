@@ -101,7 +101,7 @@ public class FactoryMongo {
         dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
 
     }
-    public void deleteGarantiasFields(String c){
+    public void deleteGarantiasFields(HashMap c){
 
         dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
 
@@ -116,7 +116,7 @@ public class FactoryMongo {
         dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
 
     }
-    public void deleteParametricValues(String c){
+    public void deleteParametricValues(HashMap c){
 
         dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
 

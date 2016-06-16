@@ -43,14 +43,9 @@ public class ConfigServices {
     @Path("/garantias-field")
     @PermitAll
     public String removeGarantiasFiled(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        fm.deleteGarantiasFields(stringBuilder.toString());
+        criterial.clear();
+        fillCriterialFromString(req.getQueryString());
+        fm.deleteGarantiasFields(criterial);
         return "Elimiando";
     }
     @POST
@@ -84,17 +79,12 @@ public class ConfigServices {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/garantias-parametricvalues")
+    @Path("/garantias-parametricvalues/{id}")
     @PermitAll
-    public String removeGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        fm.deleteParametricValues(stringBuilder.toString());
+    public String removeGarantiasParametricValues(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
+        criterial.clear();
+        fillCriterialFromString(req.getQueryString());
+        fm.deleteParametricValues(criterial);
         return "Elimiando";
     }
     @POST

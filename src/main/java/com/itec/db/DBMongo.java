@@ -50,19 +50,20 @@ public class DBMongo {
 
     return "actualizado";
     }
-    public String removeGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
+    public String removeGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
 
-        BasicDBList documentList =(BasicDBList) JSON.parse(c);
-        BasicDBObject document ;
+        List<DBObject> data= new ArrayList<>();
         BasicDBObject searchQuery2  = new BasicDBObject();
-        BasicDBObject _id;
-        for (Object object : documentList) {
-            document=(BasicDBObject) object;
-            _id=(BasicDBObject) document.get("_id");
-            ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
-            searchQuery2.append("_id", o);
-            collection.remove(searchQuery2);
+        Iterator it = criterial.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+
+            searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
+            it.remove();
         }
+
+        //BasicDBObject searchQuery2  = new BasicDBObject();
+        collection.remove(searchQuery2);
 
         return "eliminado";
     }
