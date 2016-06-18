@@ -13,6 +13,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,67 +77,71 @@ public class FactoryMongo {
         return database.getCollection(name);
     }
 
+    public DBCollection getCollection(){
+        return getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
+    }
+
     public void insertGarantias(String c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.insertGarantias(getCollection(), curs, mongoClient, c);
 
     }
     public void actualizarGarantias(String c){
 
-        dbP.updateGarantias(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.updateGarantias(getCollection(), curs, mongoClient, c);
 
     }
     public List<DBObject> getGarantias(HashMap criterial){
 
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+        return dbP.getGarantiasCriterial(getCollection(), curs, mongoClient, criterial);
 
     }
     public List<DBObject> getGarantiasFields(HashMap criterial){
 
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+        return dbP.getGarantiasCriterial(getCollection(), curs, mongoClient, criterial);
 
     }
     public void insertGarantiasFields(String c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.insertGarantias(getCollection(), curs, mongoClient, c);
 
     }
     public void deleteGarantiasFields(HashMap c){
 
-        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.removeGarantias(getCollection(), curs, mongoClient, c);
 
     }
     public List<DBObject> getGarantiasParametricValues(HashMap criterial){
 
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, criterial);
+        return dbP.getGarantiasCriterial(getCollection(), curs, mongoClient, criterial);
 
     }
     public void insertGarantiasParametricValues(String c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.insertGarantias(getCollection(), curs, mongoClient, c);
 
     }
     public void deleteParametricValues(HashMap c){
 
-        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS), curs, mongoClient, c);
+        dbP.removeGarantias(getCollection(), curs, mongoClient, c);
 
     }
+
     public List<DBObject> getMetadata(String criterial){
-        getMongoClient(USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
-        getDatabase(DATA_BASE_GARANTIAS);
-        DBCollection dbCollection =
-                getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],
-                        USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
-        return dbP.getListMetadata(dbCollection, database, criterial);
+        return dbP.getListMetadata(getCollection(), database, criterial);
 
     }
 
     public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial){
-        DBCollection dbCollection =
-                getCollection(COLLECTION_GARANTIAS,USER_PASS_GARANTIAS.split(":")[0],
-                        USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
-        return dbP.searchMetadata(dbCollection, criterial);
+        return dbP.searchMetadata(getCollection(), criterial);
 
     }
 
+    public void saveFileUpload(InputStream uploadedInputStream){
+        dbP.saveFileUpload(getCollection(), database, uploadedInputStream);
+    }
+
+    public void retrieveFileUpload(String fileName){
+        dbP.retrieveFileUpload(getCollection(), database, fileName);
+    }
 }

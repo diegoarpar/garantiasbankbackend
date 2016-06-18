@@ -5,7 +5,7 @@
  */
 package com.itec.oauth;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 import com.itec.db.FactoryMongo;
 import com.itec.pojo.Token;
 import com.itec.pojo.User;
@@ -32,7 +32,7 @@ public class Autenticator implements Authenticator<String, User>{
         if (token.equals("35b6b8202ca92164151af7e2d7ea667b6bf01968d28400899fd1f0cdc5f51aa1")){
             Response.status(Response.Status.ACCEPTED);
             return  Optional.of(new User("diego",t,"123"));
-            
+
         }
 /*       if (f.isValidToken(t)) {
             Response.status(Response.Status.ACCEPTED);
@@ -46,7 +46,7 @@ public class Autenticator implements Authenticator<String, User>{
      Response.status(Response.Status.ACCEPTED);
             return  Optional.of(new User("diego",t,"123"));
     }
-    
-    
-    
+
+
+
 }

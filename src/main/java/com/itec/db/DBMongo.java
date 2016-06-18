@@ -7,10 +7,15 @@ package com.itec.db;
 
 import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.*;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 import org.adrianwalker.multilinestring.Multiline;
 import org.bson.types.ObjectId;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -144,6 +149,41 @@ public class DBMongo {
         }
         return data;
 
+    }
+
+    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream){
+        GridFS gridfs = new GridFS(dataBase, "downloads");
+        GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
+        gfsFile.setFilename("MongoDB-OSX-2-1.2.1");
+        gfsFile.save();
+        //
+        // Let's create a new JSON document with some "metadata" information on the download
+        //
+        BasicDBObject info = new BasicDBObject();
+        info.put("name", "MongoDB");
+        info.put("fileName", "MongoDB-OSX-2-1.2.1");
+        info.put("rawName", "mongodb-osx-x86_64-2-1.2.1.tgz");
+        info.put("rawPath", "/Users/thomasjaspers/Downloads/");
+
+        //
+        // Let's store our document to MongoDB
+        //
+        dbCollection.insert(info, WriteConcern.SAFE);
+
+        return null;
+    }
+
+    public List retrieveFileUpload(DBCollection dbCollection, DB dataBase,  String nameFile){
+        GridFS gridfs = new GridFS(dataBase, "downloads");
+        // get image file by it's filename
+        GridFSDBFile imageForOutput = gridfs.findOne("MongoDB");
+        try {
+            imageForOutput.writeTo("/home/joag/Documents/" + "MongoDB");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

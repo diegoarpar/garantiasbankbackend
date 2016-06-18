@@ -11,6 +11,7 @@ import com.itec.pojo.User;
 import com.itec.services.ConfigServices;
 import com.itec.services.SearchServices;
 import com.itec.services.Services;
+import com.itec.services.UploadServices;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
@@ -24,6 +25,7 @@ import java.util.TimeZone;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 /**
@@ -44,20 +46,18 @@ public class Garantias extends  Application<ConfigurationExample> {
 
     @Override
     public void run(ConfigurationExample t, Environment e) throws Exception {
-            t.getTemplate();
-            t.getDefaultName();
-        FilterRegistration.Dynamic filter = e.servlets().addFilter("CORSFilter", CrossOriginFilter.class);
-                                    filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, e.getApplicationContext().getContextPath() + "*");
-                                    filter.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
-                                    filter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-                                    filter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, Authorization");
-                                    filter.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
-        final Services db = new Services();
-        final SearchServices searchServices = new SearchServices();
-        final ConfigServices configServices = new ConfigServices();
-        e.jersey().register(db);
-        e.jersey().register(searchServices);
-        e.jersey().register(configServices);
+        t.getTemplate();
+        t.getDefaultName();
+        configureCors(e);
+
+        e.jersey().register(MultiPartFeature.class);
+        e.jersey().register(Services.class);
+        e.jersey().register(SearchServices.class);
+        e.jersey().register(ConfigServices.class);
+        e.jersey().register(UploadServices.class);
+
+        //e.jersey().register(UploadServices.class);
+
 
         e.jersey().register(new AuthDynamicFeature(
         new OAuthCredentialAuthFilter.Builder<User>()
@@ -67,6 +67,15 @@ public class Garantias extends  Application<ConfigurationExample> {
             .buildAuthFilter()));
 
         e.jersey().register(RolesAllowedDynamicFeature.class);
+    }
+
+    private void configureCors(Environment e) {
+        FilterRegistration.Dynamic filter = e.servlets().addFilter("CORSFilter", CrossOriginFilter.class);
+        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, e.getApplicationContext().getContextPath() + "*");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, Authorization");
+        filter.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
     }
 }
 
