@@ -20,12 +20,7 @@ import java.util.TimeZone;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -42,7 +37,6 @@ public class Services {
 
      @RolesAllowed("ADMIN")
      @POST
-     @Consumes(MediaType.APPLICATION_JSON)
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
@@ -54,13 +48,28 @@ public class Services {
             }
             br.close();
             f.insertGarantias(stringBuilder.toString());
-            return  "FIRMANDO";
+            return  "[{realizado:\"ok\"}]";
         }
      @POST
      @Consumes(MediaType.APPLICATION_JSON)
      @Path("/updateGarantias")
      @PermitAll
-    public String updateGarantias(@Context HttpServletRequest req) throws IOException {
+    public String updateGarantias2(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        f.actualizarGarantias(stringBuilder.toString());
+        return  "FIRMANDO";
+    }
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/insertGarantias")
+    @PermitAll
+    public String updateGarantias(@Context HttpServletRequest req,@PathParam("id") String id) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
         String read;
@@ -73,7 +82,7 @@ public class Services {
     }
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/getGarantias")
+    @Path("/insertGarantias")
     @PermitAll
     public  List<DBObject> getGarantias(@Context HttpServletRequest req) throws IOException {
         fillCriterialFromString(req.getQueryString());
