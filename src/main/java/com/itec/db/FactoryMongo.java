@@ -29,11 +29,8 @@ public class FactoryMongo {
     private static final String COLLECTION_GARANTIAS= "garantias";
     private static final String COLLECTION_GARANTIAS_FIELDS= "garantias_fields";
     private static final String COLLECTION_GARANTIAS_PARAMETRICS_VALUES= "garantias_parametrics_values";
-    private static final String USER_PASS_GARANTIAS= "certi:certi123";
-    private static final String URL_GARANTIAS= "localhost";
-    private static final String DATA_BASE_GARANTIAS= "garantiasdb";
-    private static final String MONGO_COLLECTION_USERS= "digitalizacion_user";
-    private static final String MONGO_COLLECTION_TOKEN= "digitalizacion_token";
+    private static final String COLLECTION_GARANTIAS_DOCUMENTS= "garantias_documents";
+
     private MongoClient mongoClient =null;
     private DB database =null ;
     private DBCursor curs;
@@ -140,8 +137,8 @@ public class FactoryMongo {
 
     }
 
-    public void saveFileUpload(InputStream uploadedInputStream){
-        dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS), database, uploadedInputStream);
+    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName){
+        dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName);
     }
 
     public void retrieveFileUpload(String fileName){

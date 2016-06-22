@@ -151,19 +151,17 @@ public class DBMongo {
 
     }
 
-    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream){
+    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream, String location, String fileName){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
-        gfsFile.setFilename("MongoDB-OSX-2-1.2.1");
+        gfsFile.setFilename(fileName);
         gfsFile.save();
         //
         // Let's create a new JSON document with some "metadata" information on the download
         //
         BasicDBObject info = new BasicDBObject();
-        info.put("name", "MongoDB");
-        info.put("fileName", "MongoDB-OSX-2-1.2.1");
-        info.put("rawName", "mongodb-osx-x86_64-2-1.2.1.tgz");
-        info.put("rawPath", "/Users/thomasjaspers/Downloads/");
+        info.put("fileName", fileName);
+        info.put("rawPath", location);
 
         //
         // Let's store our document to MongoDB
