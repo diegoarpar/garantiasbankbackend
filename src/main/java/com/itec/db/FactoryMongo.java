@@ -5,6 +5,7 @@
  */
 package com.itec.db;
 
+import com.itec.configuration.ConfigurationExample;
 import com.itec.pojo.*;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -17,6 +18,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.itec.configuration.ConfigurationExample.*;
 
 /**
  *
@@ -78,7 +81,7 @@ public class FactoryMongo {
     }
 
     public DBCollection getCollection(String collection){
-        return getCollection(collection,USER_PASS_GARANTIAS.split(":")[0],USER_PASS_GARANTIAS.split(":")[1],URL_GARANTIAS,DATA_BASE_GARANTIAS);
+        return getCollection(collection, ConfigurationExample.DATABASE_USER,ConfigurationExample.DATABASE_PASS,ConfigurationExample.DATABASE_SERVER_URL,ConfigurationExample.DATABASE_NAME);
     }
 
     public void insertGarantias(String c){

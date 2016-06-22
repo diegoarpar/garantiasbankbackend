@@ -48,6 +48,7 @@ public class Garantias extends  Application<ConfigurationExample> {
     public void run(ConfigurationExample t, Environment e) throws Exception {
         t.getTemplate();
         t.getDefaultName();
+        t.getFilePath();
         configureCors(e);
 
         e.jersey().register(MultiPartFeature.class);

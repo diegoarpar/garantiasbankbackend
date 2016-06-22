@@ -1,5 +1,6 @@
 package com.itec.services;
 
+import com.itec.configuration.ConfigurationExample;
 import com.itec.db.FactoryMongo;
 import com.mongodb.gridfs.GridFS;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -28,11 +29,12 @@ public class UploadServices {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @FormDataParam("fileName") String name) throws IOException {
+
         // TODO: uploadFileLocation should come from config.yml
-        /*String uploadedFileLocation = "/home/joag/Documents/" + fileDetail.getFileName();
+        String uploadedFileLocation = ConfigurationExample.UPLOAD_FILE_PATH + fileDetail.getFileName();
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
-        String output = "File uploaded to : " + uploadedFileLocation;*/
+        String output = "File uploaded to : " + uploadedFileLocation;
         fm.saveFileUpload(uploadedInputStream);
 
         return Response.ok("ok").build();
@@ -50,7 +52,7 @@ public class UploadServices {
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;*/
-        fm.retrieveFileUpload(uploadedInputStream);
+        //fm.retrieveFileUpload(uploadedInputStream);
 
         return Response.ok("ok").build();
     }
