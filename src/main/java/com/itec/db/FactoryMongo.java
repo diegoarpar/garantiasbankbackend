@@ -138,8 +138,8 @@ public class FactoryMongo {
 
     }
 
-    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName){
-        dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName);
+    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, String garid){
+        dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName, garid);
     }
 
     public void retrieveFileUpload(String fileName){

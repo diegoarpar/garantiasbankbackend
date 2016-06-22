@@ -31,14 +31,16 @@ public class UploadServices {
     public Response uploadFile(@Context HttpServletRequest req,
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("fileName") String name) throws IOException {
+            @FormDataParam("fileName") String name,
+            @FormDataParam("garid") String garId
+            ) throws IOException {
 
         // TODO: uploadFileLocation should come from config.yml
         String uploadedFileLocation = ConfigurationExample.UPLOAD_FILE_PATH + fileDetail.getFileName();
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;
-        fm.saveFileUpload(uploadedInputStream,uploadedFileLocation,fileDetail.getFileName());
+        fm.saveFileUpload(uploadedInputStream,uploadedFileLocation,fileDetail.getFileName(), garId);
 
         return Response.ok("ok").build();
     }
