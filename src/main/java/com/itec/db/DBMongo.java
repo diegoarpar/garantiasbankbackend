@@ -151,7 +151,7 @@ public class DBMongo {
 
     }
 
-    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream, String location, String fileName){
+    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream, String location, String fileName, String garId){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
         gfsFile.setFilename(fileName);
@@ -162,6 +162,7 @@ public class DBMongo {
         BasicDBObject info = new BasicDBObject();
         info.put("fileName", fileName);
         info.put("rawPath", location);
+        info.put("garid", garId);
 
         //
         // Let's store our document to MongoDB
