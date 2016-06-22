@@ -2,6 +2,7 @@ package com.itec.services;
 
 import com.itec.db.FactoryMongo;
 import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -27,32 +28,22 @@ public class UploadServices {
     public Response uploadFile(
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("fileName") String name) throws IOException {
-        // TODO: uploadFileLocation should come from config.yml
-        /*String uploadedFileLocation = "/home/joag/Documents/" + fileDetail.getFileName();
-        // save it
-        writeToFile(uploadedInputStream, uploadedFileLocation);
-        String output = "File uploaded to : " + uploadedFileLocation;*/
-        fm.saveFileUpload(uploadedInputStream);
-
+            @FormDataParam("fileName") String fileName) throws IOException {
+        fm.saveFileUpload(uploadedInputStream, fileName);
         return Response.ok("ok").build();
     }
 
-    @POST
+    @GET
     @Path("/retrieve")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response retrieveFile(
-            @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("fileName") String name) throws IOException {
-        // TODO: uploadFileLocation should come from config.yml
-        /*String uploadedFileLocation = "/home/joag/Documents/" + fileDetail.getFileName();
-        // save it
-        writeToFile(uploadedInputStream, uploadedFileLocation);
-        String output = "File uploaded to : " + uploadedFileLocation;*/
-        fm.retrieveFileUpload(uploadedInputStream);
-
-        return Response.ok("ok").build();
+    @Produces("application/pdf")
+    public Response retrieveFile(@QueryParam(value="name") String pdfFileName) throws IOException {
+        GridFSDBFile fileOutput = fm.retrieveFileUpload(pdfFileName);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        fileOutput.writeTo(stream);
+        return Response
+                .ok(stream.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = " + pdfFileName)
+                .build();
     }
 
 

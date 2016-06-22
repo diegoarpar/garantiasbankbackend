@@ -12,6 +12,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.gridfs.GridFSDBFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -137,11 +138,11 @@ public class FactoryMongo {
 
     }
 
-    public void saveFileUpload(InputStream uploadedInputStream){
-        dbP.saveFileUpload(getCollection(), database, uploadedInputStream);
+    public void saveFileUpload(InputStream uploadedInputStream, String fileName){
+        dbP.saveFileUpload(getCollection(), database, uploadedInputStream, fileName);
     }
 
-    public void retrieveFileUpload(String fileName){
-        dbP.retrieveFileUpload(getCollection(), database, fileName);
+    public GridFSDBFile retrieveFileUpload(String fileName){
+        return dbP.retrieveFileUpload(getCollection(), database, fileName);
     }
 }

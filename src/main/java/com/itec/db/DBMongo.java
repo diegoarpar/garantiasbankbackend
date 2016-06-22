@@ -151,19 +151,20 @@ public class DBMongo {
 
     }
 
-    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream){
+    public List saveFileUpload(DBCollection dbCollection, DB dataBase,
+                               InputStream uploadedInputStream, String fileName){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
-        gfsFile.setFilename("MongoDB-OSX-2-1.2.1");
+        gfsFile.setFilename(fileName);
         gfsFile.save();
         //
         // Let's create a new JSON document with some "metadata" information on the download
         //
         BasicDBObject info = new BasicDBObject();
         info.put("name", "MongoDB");
-        info.put("fileName", "MongoDB-OSX-2-1.2.1");
-        info.put("rawName", "mongodb-osx-x86_64-2-1.2.1.tgz");
-        info.put("rawPath", "/Users/thomasjaspers/Downloads/");
+        info.put("fileName", fileName);
+        info.put("rawName", fileName);
+        info.put("rawPath", "/data/db/" + fileName);
 
         //
         // Let's store our document to MongoDB
@@ -173,17 +174,11 @@ public class DBMongo {
         return null;
     }
 
-    public List retrieveFileUpload(DBCollection dbCollection, DB dataBase,  String nameFile){
+    public GridFSDBFile retrieveFileUpload(DBCollection dbCollection, DB dataBase,  String fileName){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         // get image file by it's filename
-        GridFSDBFile imageForOutput = gridfs.findOne("MongoDB");
-        try {
-            imageForOutput.writeTo("/home/joag/Documents/" + "MongoDB");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        GridFSDBFile imageForOutput = gridfs.findOne(fileName);
+        return imageForOutput;
     }
 
 }
