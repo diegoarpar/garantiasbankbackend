@@ -79,14 +79,15 @@ public class ConfigServices {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/garantias-parametricvalues/{id}")
+    @Path("/garantias-parametricvalues/delete/")
     @PermitAll
-    public String removeGarantiasParametricValues(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
+    public String removeGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         fillCriterialFromString(req.getQueryString());
         fm.deleteParametricValues(criterial);
         return "Elimiando";
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues")

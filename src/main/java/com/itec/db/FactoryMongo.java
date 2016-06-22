@@ -45,7 +45,8 @@ public class FactoryMongo {
         if(mongoClient==null){
             //mongoClient = new MongoClient(new MongoClientURI("mongodb://"+MONGO_SERVER));
             //mongoClient = new MongoClient(new MongoClientURI("mongodb://certi:Certi123@10.130.186.221:27017/?authSource=reportestelefonica&authMechanism=MONGODB-CR"));
-            mongoClient = new MongoClient(new MongoClientURI("mongodb://"+user+":"+pass+"@"+url+":27017/?authSource="+dataBase+"&authMechanism=MONGODB-CR"));
+            mongoClient = new MongoClient(
+                    new MongoClientURI("mongodb://"+user+":"+pass+"@"+url+":27017/?authSource="+dataBase+"&authMechanism=MONGODB-CR"));
         }
         return mongoClient;
     }
@@ -79,7 +80,8 @@ public class FactoryMongo {
     }
 
     public DBCollection getCollection(String collection){
-        return getCollection(collection, ConfigurationExample.DATABASE_USER,ConfigurationExample.DATABASE_PASS,ConfigurationExample.DATABASE_SERVER_URL,ConfigurationExample.DATABASE_NAME);
+        return getCollection(collection, ConfigurationExample.DATABASE_USER,ConfigurationExample.DATABASE_PASS,
+                ConfigurationExample.DATABASE_SERVER_URL,ConfigurationExample.DATABASE_NAME);
     }
 
     public void insertGarantias(String c){
@@ -130,7 +132,6 @@ public class FactoryMongo {
 
     public List<DBObject> getMetadata(String criterial){
         return dbP.getListMetadata(getCollection(COLLECTION_GARANTIAS), database, criterial);
-
     }
 
     public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial){
@@ -142,7 +143,7 @@ public class FactoryMongo {
         dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName, garid);
     }
 
-    public void retrieveFileUpload(String fileName){
-        dbP.retrieveFileUpload(getCollection(COLLECTION_GARANTIAS), database, fileName);
+    public GridFSDBFile retrieveFileUpload(String fileName){
+        return dbP.retrieveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, fileName);
     }
 }

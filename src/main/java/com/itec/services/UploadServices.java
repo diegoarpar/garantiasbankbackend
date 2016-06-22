@@ -40,7 +40,7 @@ public class UploadServices {
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;
-        fm.saveFileUpload(uploadedInputStream,uploadedFileLocation,fileDetail.getFileName(), garId);
+        fm.saveFileUpload(new FileInputStream(uploadedFileLocation), uploadedFileLocation,fileDetail.getFileName(), garId);
 
         return Response.ok("ok").build();
     }
