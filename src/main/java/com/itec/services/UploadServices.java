@@ -1,5 +1,6 @@
 package com.itec.services;
 
+import com.itec.configuration.ConfigurationExample;
 import com.itec.db.FactoryMongo;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -8,7 +9,9 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
@@ -25,11 +28,18 @@ public class UploadServices {
     @POST
     @Path("/save")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(
+    public Response uploadFile(@Context HttpServletRequest req,
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("fileName") String fileName) throws IOException {
-        fm.saveFileUpload(uploadedInputStream, fileName);
+            @FormDataParam("fileName") String name) throws IOException {
+
+        // TODO: uploadFileLocation should come from config.yml
+        String uploadedFileLocation = ConfigurationExample.UPLOAD_FILE_PATH + fileDetail.getFileName();
+        // save it
+        writeToFile(uploadedInputStream, uploadedFileLocation);
+        String output = "File uploaded to : " + uploadedFileLocation;
+        fm.saveFileUpload(uploadedInputStream,uploadedFileLocation,fileDetail.getFileName());
+
         return Response.ok("ok").build();
     }
 

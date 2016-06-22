@@ -109,7 +109,7 @@
     <orderEntry type="module-library">
       <library name="Maven: sun.jdk:tools:LATEST">
         <CLASSES>
-          <root url="jar:///usr/lib/jvm/java-8-oracle/jre/../lib/tools.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/jre/jdk1.8.0_91/jre/../lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

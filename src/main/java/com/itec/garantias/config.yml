@@ -1,4 +1,9 @@
 template: Hello, %s!
+filePath: /home/
+databaseuser: certi
+databasepass: certi123
+databasename: garantiasdb
+databasurlserver: localhost
 
 defaultName: ${DW_DEFAULT_NAME:-Stranger}
 

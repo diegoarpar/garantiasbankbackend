@@ -151,8 +151,7 @@ public class DBMongo {
 
     }
 
-    public List saveFileUpload(DBCollection dbCollection, DB dataBase,
-                               InputStream uploadedInputStream, String fileName){
+    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream, String location, String fileName){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
         gfsFile.setFilename(fileName);
@@ -161,10 +160,8 @@ public class DBMongo {
         // Let's create a new JSON document with some "metadata" information on the download
         //
         BasicDBObject info = new BasicDBObject();
-        info.put("name", "MongoDB");
         info.put("fileName", fileName);
-        info.put("rawName", fileName);
-        info.put("rawPath", "/data/db/" + fileName);
+        info.put("rawPath", location);
 
         //
         // Let's store our document to MongoDB
