@@ -151,6 +151,76 @@ public class DBMongo {
 
     }
 
+    public List<DBObject> searchMetadata(DBCollection collection, ArrayList<HashMapKeyValue> criterial,
+                                         Long startDate, Long endDate, String word){
+
+        ObjectId objectStartDate= null;
+        ObjectId objectEndDate = null;
+        BasicDBObject objectDate = null;
+        BasicDBObject basicObjectStartDate=null;
+        BasicDBObject basicObjectEndDate = null;
+
+        if(startDate != null) {
+            objectStartDate = new ObjectId(new Date(startDate));
+            basicObjectStartDate = new BasicDBObject("_id", new BasicDBObject("$gte", objectStartDate));
+        }
+        if(endDate !=null) {
+            objectEndDate = new ObjectId(new Date(endDate));
+            basicObjectEndDate = new BasicDBObject("_id", new BasicDBObject("$lte", objectEndDate));
+        }
+        if(startDate!=null && endDate !=null)
+            objectDate = new BasicDBObject("_id", new BasicDBObject("$gte", objectStartDate).append("$lte",objectEndDate));
+
+        List<DBObject> data= new ArrayList<>();
+        BasicDBObject andQuery = new BasicDBObject();
+        List<BasicDBObject> searchQuery2  =  new ArrayList<BasicDBObject>();
+
+        DBCursor curs;
+
+        if(criterial.size()>0) {
+            if (criterial.size() > 1) {
+                for (HashMapKeyValue hashMapKeyValue : criterial) {
+                    searchQuery2.add(new BasicDBObject(hashMapKeyValue.getKey(), hashMapKeyValue.getValue()));
+                }
+
+                if(startDate !=null && endDate !=null){
+                    searchQuery2.add(objectDate);
+                }
+                else if(startDate !=null ){
+                    searchQuery2.add(basicObjectStartDate);
+                }
+                else if(endDate !=null) {
+                    searchQuery2.add(basicObjectEndDate);
+                }
+                andQuery.put("$and", searchQuery2);
+                curs = collection.find(andQuery);
+
+            }
+            else {
+                BasicDBObject basicDBObject = new BasicDBObject(criterial.get(0).getKey(), criterial.get(0).getValue());
+                curs = collection.find(basicDBObject);
+            }
+        }
+        else if(startDate !=null && endDate !=null){
+                curs = collection.find(objectDate);
+        }
+        else if(startDate !=null ){
+            curs = collection.find(basicObjectStartDate);
+        }
+        else if(endDate !=null)
+            curs = collection.find(basicObjectEndDate);
+        else {
+            curs = collection.find();
+        }
+
+        while (curs.hasNext()) {
+            DBObject o = curs.next();
+            data.add(o);
+        }
+        return data;
+
+    }
+
     public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream, String location, String fileName, String garId){
         GridFS gridfs = new GridFS(dataBase, "downloads");
         GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);

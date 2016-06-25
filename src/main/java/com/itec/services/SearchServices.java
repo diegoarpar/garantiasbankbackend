@@ -62,9 +62,52 @@ public class SearchServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/searchWithMetadata")
-    public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> queryString) throws IOException {
-        return f.searchWithMetadata(queryString);
+    public List<DBObject> searchWithMetadata(TransferObject transferObject) throws IOException {
+        return f.searchWithMetadata(transferObject.getQueryString(),
+                transferObject.getStartDate(), transferObject.getEndDate(), transferObject.getWord());
         //return null;
     }
 
+
+
+    public static class TransferObject {
+        ArrayList<HashMapKeyValue> queryString;
+        Long startDate;
+        Long endDate;
+        String word;
+
+        public ArrayList<HashMapKeyValue> getQueryString() {
+            return queryString;
+        }
+
+        public void setQueryString(ArrayList<HashMapKeyValue> queryString) {
+            this.queryString = queryString;
+        }
+
+        public Long getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(Long startDate) {
+            this.startDate = startDate;
+        }
+
+        public Long getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(Long endDate) {
+            this.endDate = endDate;
+        }
+
+        public String getWord() {
+            return word;
+        }
+
+        public void setWord(String word) {
+            this.word = word;
+        }
+
+
+    }
 }

@@ -17,6 +17,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,7 +137,10 @@ public class FactoryMongo {
 
     public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial){
         return dbP.searchMetadata(getCollection(COLLECTION_GARANTIAS), criterial);
+    }
 
+    public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial, Long startDate, Long endDate, String word){
+        return dbP.searchMetadata(getCollection(COLLECTION_GARANTIAS), criterial, startDate, endDate, word);
     }
 
     public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, String garid){
