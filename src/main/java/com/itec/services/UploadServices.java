@@ -4,6 +4,7 @@ import com.itec.configuration.ConfigurationExample;
 import com.itec.db.FactoryMongo;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.HashMap;
 
 /**
  * Created by root on 14/06/16.
@@ -32,17 +34,26 @@ public class UploadServices {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @FormDataParam("fileName") String name,
-            @FormDataParam("garid") String garId
+            @FormDataParam("timestamp") String timestamp,
+           @FormDataParam("machineIdentifier") String machineIdentifier,
+           @FormDataParam("processIdentifier") String processIdentifier,
+           @FormDataParam("counter") String counter
+
             ) throws IOException {
 
+        ObjectId o =new ObjectId(Integer.parseInt(timestamp),
+                Integer.parseInt(machineIdentifier),
+                (short)Integer.parseInt(processIdentifier),
+                Integer.parseInt(counter)
+        );
         // TODO: uploadFileLocation should come from config.yml
         String uploadedFileLocation = ConfigurationExample.UPLOAD_FILE_PATH + fileDetail.getFileName();
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;
-        fm.saveFileUpload(new FileInputStream(uploadedFileLocation), uploadedFileLocation,fileDetail.getFileName(), garId);
+        fm.saveFileUpload(new FileInputStream(uploadedFileLocation), uploadedFileLocation,fileDetail.getFileName(), o);
 
-        return Response.ok("ok").build();
+        return Response.ok().build();
     }
 
     @GET
@@ -71,5 +82,7 @@ public class UploadServices {
         out.flush();
         out.close();
     }
+
+
 
 }

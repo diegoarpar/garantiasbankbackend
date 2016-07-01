@@ -14,6 +14,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.gridfs.GridFSDBFile;
+import org.bson.types.ObjectId;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -143,7 +144,7 @@ public class FactoryMongo {
         return dbP.searchMetadata(getCollection(COLLECTION_GARANTIAS), criterial, startDate, endDate, word);
     }
 
-    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, String garid){
+    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, ObjectId garid){
         dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName, garid);
     }
 
