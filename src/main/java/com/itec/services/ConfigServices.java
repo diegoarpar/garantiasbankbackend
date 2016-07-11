@@ -39,6 +39,7 @@ public class ConfigServices {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-field/{id}")
     @PermitAll
@@ -49,6 +50,7 @@ public class ConfigServices {
         return "Elimiando";
     }
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-field")
     @PermitAll
@@ -78,6 +80,7 @@ public class ConfigServices {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues/delete/")
     @PermitAll
@@ -89,6 +92,7 @@ public class ConfigServices {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues")
     @PermitAll

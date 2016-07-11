@@ -51,6 +51,7 @@ public class Services {
             return  "[{realizado:\"ok\"}]";
         }
      @POST
+     @Produces(MediaType.TEXT_PLAIN)
      @Consumes(MediaType.APPLICATION_JSON)
      @Path("/updateGarantias")
      @PermitAll
@@ -65,7 +66,9 @@ public class Services {
         f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
     }
+
     @PUT
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertGarantias")
     @PermitAll
@@ -80,6 +83,7 @@ public class Services {
         f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
     }
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertGarantias")
