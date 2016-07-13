@@ -151,4 +151,8 @@ public class FactoryMongo {
     public GridFSDBFile retrieveFileUpload(String fileName){
         return dbP.retrieveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, fileName);
     }
+
+    public List<DBObject> retrieveListOfFiles(ObjectId garid){
+        return dbP.retrieveListOfFiles(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, garid);
+    }
 }

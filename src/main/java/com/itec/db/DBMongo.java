@@ -7,11 +7,13 @@ package com.itec.db;
 
 import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.*;
+import com.mongodb.client.FindIterable;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 import org.adrianwalker.multilinestring.Multiline;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
@@ -47,10 +49,15 @@ public class DBMongo {
             //collection.update(searchQuery2.append("_id", document.get("_id")),document);
              _id=(BasicDBObject) document.get("_id");
              ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
-             searchQuery2.append("_id", o);
+             /*searchQuery2.append("_id", o);
              document.remove("_id");
              collection.remove(searchQuery2);
-            collection.insert(document);
+            collection.insert(document);*/
+             document.append("_id", o);
+             collection.update(
+                     new BasicDBObject("_id", o),
+                     document);
+
         }
 
     return "actualizado";
@@ -250,6 +257,19 @@ public class DBMongo {
         // get image file by it's filename
         GridFSDBFile imageForOutput = gridfs.findOne(fileName);
         return imageForOutput;
+    }
+
+    public List<DBObject> retrieveListOfFiles(DBCollection dbCollection, DB dataBase,  ObjectId garId){
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.put("garid", garId);
+
+        DBCursor curs = dbCollection.find(whereQuery);
+        ArrayList<DBObject> files = new ArrayList<>();
+        while (curs.hasNext()) {
+            files.add(curs.next());
+
+        }
+        return files;
     }
 
 }

@@ -2,6 +2,7 @@ package com.itec.services;
 
 import com.itec.configuration.ConfigurationExample;
 import com.itec.db.FactoryMongo;
+import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.bson.types.ObjectId;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by root on 14/06/16.
@@ -67,6 +69,23 @@ public class UploadServices {
                 .ok(stream.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition","attachment; filename = " + pdfFileName)
                 .build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/list")
+    public List<DBObject> retrieveListOfFiles(@FormDataParam("timestamp") String timestamp,
+                                              @FormDataParam("machineIdentifier") String machineIdentifier,
+                                              @FormDataParam("processIdentifier") String processIdentifier,
+                                              @FormDataParam("counter") String counter) throws IOException {
+        ObjectId o =new ObjectId(Integer.parseInt(timestamp),
+                Integer.parseInt(machineIdentifier),
+                (short)Integer.parseInt(processIdentifier),
+                Integer.parseInt(counter)
+        );
+
+        return fm.retrieveListOfFiles(o);
+
     }
 
 
