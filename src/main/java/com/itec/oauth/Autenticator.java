@@ -22,7 +22,7 @@ public class Autenticator implements Authenticator<String, User>{
     @Override
     public Optional<User> authenticate(String token) throws AuthenticationException {
         try {
-            CallToken.isValidToken(token);
+            CallToken.isValidToken(token.split(",")[0],token.split(",")[1]);
         } catch (IOException e) {
             e.printStackTrace();
         }

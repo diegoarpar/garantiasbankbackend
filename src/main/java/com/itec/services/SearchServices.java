@@ -56,7 +56,10 @@ public class SearchServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/getMetadata")
     public  List<DBObject> getMetaData() throws IOException {
-        return f.getMetadata(searchMetaData);
+
+        //return f.getMetadata(searchMetaData);
+        return null;
+
     }
 
     @POST

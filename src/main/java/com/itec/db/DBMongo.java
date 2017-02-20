@@ -26,41 +26,29 @@ import java.util.*;
  */
 
 public class DBMongo {
-    public String insertGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
-
-        BasicDBList documentList =(BasicDBList) JSON.parse(c);
-        BasicDBObject document;
-        for (Object object : documentList) {
-            document=(BasicDBObject) object;
-            collection.insert(document);
-        }
-
-
-    return "Insertado";
-    }
-    public String updateGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, String c){
-
-        BasicDBList documentList =(BasicDBList) JSON.parse(c);
-        BasicDBObject document ;
+    public void insertGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
         BasicDBObject searchQuery2  = new BasicDBObject();
-        BasicDBObject _id;
-        for (Object object : documentList) {
-            document=(BasicDBObject) object;
-            //collection.update(searchQuery2.append("_id", document.get("_id")),document);
-             _id=(BasicDBObject) document.get("_id");
-             ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
-             /*searchQuery2.append("_id", o);
-             document.remove("_id");
-             collection.remove(searchQuery2);
-            collection.insert(document);*/
-             document.append("_id", o);
-             collection.update(
-                     new BasicDBObject("_id", o),
-                     document);
-
+        Iterator it = criterial.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
         }
 
-    return "actualizado";
+        collection.insert(searchQuery2);
+
+    }
+    public void updateGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+        BasicDBObject searchQuery2  = new BasicDBObject();
+        Iterator it = criterial.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
+        }
+
+        ObjectId o =new ObjectId((int)searchQuery2.get("timestamp"), (int)searchQuery2.get("machineIdentifier"), (short)(int)searchQuery2.get("processIdentifier"), (int)searchQuery2.get("counter"));
+        searchQuery2.remove("_id");
+        collection.update(new BasicDBObject("_id", o),searchQuery2);
+
     }
     public String removeGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
 
@@ -119,7 +107,7 @@ public class DBMongo {
     @Multiline
     private static String reduce;
 
-    public List getListMetadata(DBCollection dbCollection, DB dataBase,  String criterial){
+    public List getListMetadata(DBCollection dbCollection, DB dataBase,  HashMap criterial){
         MapReduceCommand cmd = new MapReduceCommand(dbCollection, map, reduce,
             "garantias_keys" , MapReduceCommand.OutputType.INLINE, null);
         MapReduceOutput out = dbCollection.mapReduce(cmd);

@@ -1,7 +1,11 @@
 package com.itec.services;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itec.db.FactoryMongo;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +15,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by root on 14/06/16.
@@ -25,6 +28,7 @@ import java.util.List;
 public class ConfigServices {
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
+    ArrayList<HashMap<String, String>> criterialList= new ArrayList<>();
 
 
 
@@ -62,7 +66,10 @@ public class ConfigServices {
             stringBuilder.append(read);
         }
         br.close();
-        fm.insertGarantiasFields(stringBuilder.toString());
+        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+        for(HashMap o : criterialList){
+            fm.insertGarantiasFields(o);
+        }
         return  "FIRMANDO";
     }
 
@@ -104,13 +111,32 @@ public class ConfigServices {
             stringBuilder.append(read);
         }
         br.close();
-        fm.insertGarantiasParametricValues(stringBuilder.toString());
+        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+        for(HashMap o : criterialList){
+            fm.insertGarantiasParametricValues(o);
+        }
+
         return  "FIRMANDO";
     }
 
 
 
     /*OTHER METHOD*/
+    private void fillCriterialListFromDBOBject(BasicDBList dbList){
+        criterialList.clear();
+
+        for(String s : dbList.keySet()){
+            criterial.clear();
+            DBObject dbObject =((BasicDBObject) JSON.parse(dbList.get(s).toString()));
+            for(String o : dbObject.keySet()){
+                criterial.put(o,dbObject.get(o).toString());
+            }
+            criterialList.add(criterial);
+        }
+
+    }
+
+
     private void fillCriterialFromString( String queryString){
         criterial.clear();
         if(queryString!=null)

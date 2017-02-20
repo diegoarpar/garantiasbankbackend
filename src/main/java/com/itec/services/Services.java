@@ -40,7 +40,8 @@ public class Services {
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
-            StringBuilder stringBuilder = new StringBuilder();
+            req.getParameterMap();
+            /*StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
             String read;
             while((read=br.readLine()) != null) {
@@ -48,6 +49,7 @@ public class Services {
             }
             br.close();
             f.insertGarantias(stringBuilder.toString());
+            */
             return  "[{realizado:\"ok\"}]";
         }
      @POST
@@ -63,7 +65,7 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
-        f.actualizarGarantias(stringBuilder.toString());
+       // f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
     }
 
@@ -80,7 +82,7 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
-        f.actualizarGarantias(stringBuilder.toString());
+        //f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
     }
 

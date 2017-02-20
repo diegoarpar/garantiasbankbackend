@@ -18,21 +18,18 @@ import org.bson.types.ObjectId;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.itec.configuration.ConfigurationExample.*;
 
 /**
  *
  * @author iTech-Pc
  */
 public class FactoryMongo {
-    private static final String COLLECTION_GARANTIAS= "garantias";
-    private static final String COLLECTION_GARANTIAS_FIELDS= "garantias_fields";
-    private static final String COLLECTION_GARANTIAS_PARAMETRICS_VALUES= "garantias_parametrics_values";
-    private static final String COLLECTION_GARANTIAS_DOCUMENTS= "garantias_documents";
+    private static final String COLLECTION_ARCHIVO = "archivo";
+    private static final String COLLECTION_ARCHIVOS_DATOS = "archivo_fields";
+    private static final String COLLECTION_ARCHIVO_PARAMETRICS_VALUES = "archivo_parametrics_values";
+    private static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
 
     private MongoClient mongoClient =null;
     private DB database =null ;
@@ -54,105 +51,96 @@ public class FactoryMongo {
     }
 
     public DB getDatabase(String dataBase){
-        if(mongoClient!=null){
-            if(database==null){
-                //database=mongoClient.getDB("reportestelefonica");
-                //database=mongoClient.getDB("SWD_DB");
-                database=mongoClient.getDB(dataBase);
-            }
-        }
+        database=mongoClient.getDB(dataBase);
         return database;
     }
 
 
     public DBCollection getCollection(String name, String user, String pass, String url, String dataBase){
-
         getMongoClient(user,pass,url,dataBase);
-
         getDatabase(dataBase);
-
-        switch (name){
-            case COLLECTION_GARANTIAS:
-                return database.getCollection(name);
-            default:
-                break;
-        }
-
         return database.getCollection(name);
     }
 
-    public DBCollection getCollection(String collection){
+    public DBCollection getCollection(String collection,HashMap c){
+        String tenant="";
+        if(c.get("tenant")!=null)
+        if(!c.get("tenant").toString().isEmpty()){
+            tenant=c.get("tenant").toString();
+            collection=collection+"_"+tenant;
+            c.remove("tenant");
+        }
         return getCollection(collection, ConfigurationExample.DATABASE_USER,ConfigurationExample.DATABASE_PASS,
                 ConfigurationExample.DATABASE_SERVER_URL,ConfigurationExample.DATABASE_NAME);
     }
 
-    public void insertGarantias(String c){
+    public void insertGarantias(HashMap c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS), curs, mongoClient, c);
-
-    }
-    public void actualizarGarantias(String c){
-
-        dbP.updateGarantias(getCollection(COLLECTION_GARANTIAS), curs, mongoClient, c);
+        dbP.insertGarantias(getCollection(COLLECTION_ARCHIVO,c), curs, mongoClient, c);
 
     }
-    public List<DBObject> getGarantias(HashMap criterial){
+    public void actualizarGarantias(HashMap c){
 
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS), curs, mongoClient, criterial);
-
-    }
-    public List<DBObject> getGarantiasFields(HashMap criterial){
-
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_FIELDS), curs, mongoClient, criterial);
+        dbP.updateGarantias(getCollection(COLLECTION_ARCHIVO,c), curs, mongoClient, c);
 
     }
-    public void insertGarantiasFields(String c){
+    public List<DBObject> getGarantias(HashMap c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS), curs, mongoClient, c);
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_ARCHIVO,c), curs, mongoClient, c);
+
+    }
+    public List<DBObject> getGarantiasFields(HashMap c){
+
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_ARCHIVOS_DATOS,c), curs, mongoClient, c);
+
+    }
+    public void insertGarantiasFields(HashMap c){
+
+        dbP.insertGarantias(getCollection(COLLECTION_ARCHIVOS_DATOS,c), curs, mongoClient, c);
 
     }
     public void deleteGarantiasFields(HashMap c){
 
-        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_FIELDS), curs, mongoClient, c);
+        dbP.removeGarantias(getCollection(COLLECTION_ARCHIVOS_DATOS,c), curs, mongoClient, c);
 
     }
-    public List<DBObject> getGarantiasParametricValues(HashMap criterial){
+    public List<DBObject> getGarantiasParametricValues(HashMap c){
 
-        return dbP.getGarantiasCriterial(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES), curs, mongoClient, criterial);
+        return dbP.getGarantiasCriterial(getCollection(COLLECTION_ARCHIVO_PARAMETRICS_VALUES,c), curs, mongoClient, c);
 
     }
-    public void insertGarantiasParametricValues(String c){
+    public void insertGarantiasParametricValues(HashMap c){
 
-        dbP.insertGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES), curs, mongoClient, c);
+        dbP.insertGarantias(getCollection(COLLECTION_ARCHIVO_PARAMETRICS_VALUES,c), curs, mongoClient, c);
 
     }
     public void deleteParametricValues(HashMap c){
 
-        dbP.removeGarantias(getCollection(COLLECTION_GARANTIAS_PARAMETRICS_VALUES), curs, mongoClient, c);
+        dbP.removeGarantias(getCollection(COLLECTION_ARCHIVO_PARAMETRICS_VALUES,c), curs, mongoClient, c);
 
     }
 
-    public List<DBObject> getMetadata(String criterial){
-        return dbP.getListMetadata(getCollection(COLLECTION_GARANTIAS), database, criterial);
+    public List<DBObject> getMetadata(HashMap c){
+        return dbP.getListMetadata(getCollection(COLLECTION_ARCHIVO,c), database, c);
     }
 
     public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial){
-        return dbP.searchMetadata(getCollection(COLLECTION_GARANTIAS), criterial);
+        return dbP.searchMetadata(getCollection(COLLECTION_ARCHIVO,null), criterial);
     }
 
     public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial, Long startDate, Long endDate, String word){
-        return dbP.searchMetadata(getCollection(COLLECTION_GARANTIAS), criterial, startDate, endDate, word);
+        return dbP.searchMetadata(getCollection(COLLECTION_ARCHIVO,null), criterial, startDate, endDate, word);
     }
 
     public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, ObjectId garid){
-        dbP.saveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, uploadedInputStream,location,fileName, garid);
+        dbP.saveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, uploadedInputStream,location,fileName, garid);
     }
 
     public GridFSDBFile retrieveFileUpload(String fileName){
-        return dbP.retrieveFileUpload(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, fileName);
+        return dbP.retrieveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, fileName);
     }
 
     public List<DBObject> retrieveListOfFiles(ObjectId garid){
-        return dbP.retrieveListOfFiles(getCollection(COLLECTION_GARANTIAS_DOCUMENTS), database, garid);
+        return dbP.retrieveListOfFiles(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, garid);
     }
 }

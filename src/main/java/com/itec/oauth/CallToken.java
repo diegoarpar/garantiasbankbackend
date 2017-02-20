@@ -1,5 +1,7 @@
 package com.itec.oauth;
 
+import com.itec.configuration.ConfigurationExample;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,10 +16,10 @@ import java.net.URL;
 public class CallToken {
 
 
-    public static void isValidToken(String token) throws IOException {
+    public static void isValidToken(String token, String tenant) throws IOException {
         try {
 
-            URL url = new URL("http://localhost:2022/insert-database/isValidToken?token="+token);
+            URL url = new URL(ConfigurationExample.URLAUTENTICATION+"insert-database/isValidToken?token="+token+"&tenant="+tenant);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
