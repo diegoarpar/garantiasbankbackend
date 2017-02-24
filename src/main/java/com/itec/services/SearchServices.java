@@ -34,7 +34,7 @@ import java.util.*;
 public class SearchServices {
 
     FactoryMongo f = new FactoryMongo();
-
+    HashMap<String, String> criterial= new HashMap<>();
     /**
     function lines(){
         var mr = db.runCommand({
@@ -55,18 +55,25 @@ public class SearchServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/getMetadata")
-    public  List<DBObject> getMetaData() throws IOException {
-
-        //return f.getMetadata(searchMetaData);
-        return null;
+    public  List<DBObject> getMetaData(@Context HttpServletRequest req) throws IOException {
+        criterial.clear();
+        criterial.put("search",searchMetaData);
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
+        return f.getMetadata(criterial);
 
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/searchWithMetadata")
-    public List<DBObject> searchWithMetadata(TransferObject transferObject) throws IOException {
-        return f.searchWithMetadata(transferObject.getQueryString(),
+    public List<DBObject> searchWithMetadata(@Context HttpServletRequest req,TransferObject transferObject) throws IOException {
+        criterial.clear();
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
+        return f.searchWithMetadata(criterial,transferObject.getQueryString(),
                 transferObject.getStartDate(), transferObject.getEndDate(), transferObject.getWord());
         //return null;
     }
@@ -78,6 +85,7 @@ public class SearchServices {
         Long startDate;
         Long endDate;
         String word;
+        String tenant;
 
         public ArrayList<HashMapKeyValue> getQueryString() {
             return queryString;
@@ -103,12 +111,15 @@ public class SearchServices {
             this.endDate = endDate;
         }
 
+        public void setWord(String word) {
+            this.word = word;
+        }
+
         public String getWord() {
             return word;
         }
-
-        public void setWord(String word) {
-            this.word = word;
+        public String tenant() {
+            return tenant;
         }
 
 

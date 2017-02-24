@@ -28,7 +28,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class UploadServices {
     FactoryMongo fm = new FactoryMongo();
-
+    HashMap<String, String> criterial= new HashMap<>();
     @POST
     @Path("/save")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -53,7 +53,11 @@ public class UploadServices {
         // save it
         writeToFile(uploadedInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;
-        fm.saveFileUpload(new FileInputStream(uploadedFileLocation), uploadedFileLocation,fileDetail.getFileName(), o);
+        criterial.clear();
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
+        fm.saveFileUpload(criterial,new FileInputStream(uploadedFileLocation), uploadedFileLocation,fileDetail.getFileName(), o);
 
         return Response.ok().build();
     }
@@ -61,8 +65,12 @@ public class UploadServices {
     @GET
     @Path("/retrieve")
     @Produces("application/pdf")
-    public Response retrieveFile(@QueryParam(value="name") String pdfFileName) throws IOException {
-        GridFSDBFile fileOutput = fm.retrieveFileUpload(pdfFileName);
+    public Response retrieveFile(@Context HttpServletRequest req,@QueryParam(value="name") String pdfFileName) throws IOException {
+        criterial.clear();
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
+        GridFSDBFile fileOutput = fm.retrieveFileUpload(criterial,pdfFileName);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         fileOutput.writeTo(stream);
         return Response
@@ -74,7 +82,7 @@ public class UploadServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
-    public List<DBObject> retrieveListOfFiles(@FormDataParam("timestamp") String timestamp,
+    public List<DBObject> retrieveListOfFiles(@Context HttpServletRequest req,@FormDataParam("timestamp") String timestamp,
                                               @FormDataParam("machineIdentifier") String machineIdentifier,
                                               @FormDataParam("processIdentifier") String processIdentifier,
                                               @FormDataParam("counter") String counter) throws IOException {
@@ -83,8 +91,11 @@ public class UploadServices {
                 (short)Integer.parseInt(processIdentifier),
                 Integer.parseInt(counter)
         );
-
-        return fm.retrieveListOfFiles(o);
+        criterial.clear();
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
+        return fm.retrieveListOfFiles(o,criterial);
 
     }
 

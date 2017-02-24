@@ -39,6 +39,9 @@ public class ConfigServices {
     public List<DBObject> getGarantiasFiled(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         fillCriterialFromString(req.getQueryString());
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
         return fm.getGarantiasFields(criterial);
     }
 

@@ -6,17 +6,17 @@ package com.itec.services;
 
 import com.itec.db.FactoryMongo;
 import com.itec.oauth.CallToken;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -34,22 +34,29 @@ public class Services {
 
     FactoryMongo f = new FactoryMongo();
         HashMap<String, String> criterial= new HashMap<>();
-
+    ArrayList<HashMap<String, String>> criterialList= new ArrayList<>();
      @RolesAllowed("ADMIN")
      @POST
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
             req.getParameterMap();
-            /*StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
             String read;
             while((read=br.readLine()) != null) {
                 stringBuilder.append(read);
             }
             br.close();
-            f.insertGarantias(stringBuilder.toString());
-            */
+
+         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+
+         for(HashMap o : criterialList){
+             if(req.getHeader("Authorization").split(",").length>1) {
+                 o.put("tenant", req.getHeader("Authorization").split(",")[1]);
+             }
+             f.insertGarantias(o);
+         }
             return  "[{realizado:\"ok\"}]";
         }
      @POST
@@ -65,7 +72,14 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
-       // f.actualizarGarantias(stringBuilder.toString());
+         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+
+         for(HashMap o : criterialList){
+             if(req.getHeader("Authorization").split(",").length>1) {
+                 o.put("tenant", req.getHeader("Authorization").split(",")[1]);
+             }
+             f.actualizarGarantias(o);
+         }
         return  "FIRMANDO";
     }
 
@@ -82,6 +96,14 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
+        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+
+        for(HashMap o : criterialList){
+            if(req.getHeader("Authorization").split(",").length>1) {
+                o.put("tenant", req.getHeader("Authorization").split(",")[1]);
+            }
+            f.actualizarGarantias(o);
+        }
         //f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
     }
@@ -92,6 +114,9 @@ public class Services {
     @PermitAll
     public  List<DBObject> getGarantias(@Context HttpServletRequest req) throws IOException {
         fillCriterialFromString(req.getQueryString());
+        if(req.getHeader("Authorization").split(",").length>1) {
+            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
+        }
         return f.getGarantias(criterial);
     }
     @GET
@@ -108,6 +133,19 @@ public class Services {
         return "[{\"number\":\""+dateFormat.format(d)+"\"}]";
     }
 
+    private void fillCriterialListFromDBOBject(BasicDBList dbList){
+        criterialList.clear();
+
+        for(String s : dbList.keySet()){
+            criterial= new HashMap<>();
+            DBObject dbObject =((BasicDBObject) JSON.parse(dbList.get(s).toString()));
+            for(String o : dbObject.keySet()){
+                criterial.put(o,dbObject.get(o).toString());
+            }
+            criterialList.add(criterial);
+        }
+
+    }
     private void fillCriterialFromString( String queryString){
         criterial.clear();
         if(queryString!=null)

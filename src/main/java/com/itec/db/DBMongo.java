@@ -38,14 +38,16 @@ public class DBMongo {
 
     }
     public void updateGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+        BasicDBObject _id  = new BasicDBObject();
         BasicDBObject searchQuery2  = new BasicDBObject();
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
         }
+        _id = (BasicDBObject) JSON.parse(searchQuery2.get("_id").toString());
 
-        ObjectId o =new ObjectId((int)searchQuery2.get("timestamp"), (int)searchQuery2.get("machineIdentifier"), (short)(int)searchQuery2.get("processIdentifier"), (int)searchQuery2.get("counter"));
+        ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
         searchQuery2.remove("_id");
         collection.update(new BasicDBObject("_id", o),searchQuery2);
 

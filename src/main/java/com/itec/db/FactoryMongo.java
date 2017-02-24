@@ -128,19 +128,19 @@ public class FactoryMongo {
         return dbP.searchMetadata(getCollection(COLLECTION_ARCHIVO,null), criterial);
     }
 
-    public List<DBObject> searchWithMetadata(ArrayList<HashMapKeyValue> criterial, Long startDate, Long endDate, String word){
-        return dbP.searchMetadata(getCollection(COLLECTION_ARCHIVO,null), criterial, startDate, endDate, word);
+    public List<DBObject> searchWithMetadata(HashMap criterial, ArrayList<HashMapKeyValue> criterial2, Long startDate, Long endDate, String word){
+        return dbP.searchMetadata(getCollection(COLLECTION_ARCHIVO,criterial), criterial2, startDate, endDate, word);
     }
 
-    public void saveFileUpload(InputStream uploadedInputStream, String location, String fileName, ObjectId garid){
-        dbP.saveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, uploadedInputStream,location,fileName, garid);
+    public void saveFileUpload(HashMap criterial,InputStream uploadedInputStream, String location, String fileName, ObjectId garid){
+        dbP.saveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, uploadedInputStream,location,fileName, garid);
     }
 
-    public GridFSDBFile retrieveFileUpload(String fileName){
-        return dbP.retrieveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, fileName);
+    public GridFSDBFile retrieveFileUpload(HashMap criterial, String fileName){
+        return dbP.retrieveFileUpload(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, fileName);
     }
 
-    public List<DBObject> retrieveListOfFiles(ObjectId garid){
-        return dbP.retrieveListOfFiles(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,null), database, garid);
+    public List<DBObject> retrieveListOfFiles(ObjectId garid, HashMap criterial){
+        return dbP.retrieveListOfFiles(getCollection(COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, garid);
     }
 }

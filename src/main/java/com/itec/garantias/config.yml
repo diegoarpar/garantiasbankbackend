@@ -1,5 +1,5 @@
 template: Hello, %s!
-filePath: /home/
+filePath: D:/temp/
 databaseuser: certi
 databasepass: certi123
 databasename: garantiasdb
