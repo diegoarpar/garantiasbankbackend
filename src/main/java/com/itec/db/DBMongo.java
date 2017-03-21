@@ -90,7 +90,17 @@ public class DBMongo {
             }
         return data;
     }
+    public List<DBObject> getAll(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+        List<DBObject> data= new ArrayList<>();
 
+        curs=collection.find();
+
+        while(curs.hasNext()) {
+            DBObject o = curs.next();
+            data.add(o);
+        }
+        return data;
+    }
     /**
     function(){
         for (var key in this) { emit(key, null);}

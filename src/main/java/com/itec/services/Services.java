@@ -6,6 +6,7 @@ package com.itec.services;
 
 import com.itec.db.FactoryMongo;
 import com.itec.oauth.CallToken;
+import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -55,7 +56,7 @@ public class Services {
              if(req.getHeader("Authorization").split(",").length>1) {
                  o.put("tenant", req.getHeader("Authorization").split(",")[1]);
              }
-             f.insertGarantias(o);
+             f.insert(o, UTILS.COLLECTION_ARCHIVO);
          }
             return  "[{realizado:\"ok\"}]";
         }
@@ -78,7 +79,7 @@ public class Services {
              if(req.getHeader("Authorization").split(",").length>1) {
                  o.put("tenant", req.getHeader("Authorization").split(",")[1]);
              }
-             f.actualizarGarantias(o);
+             f.update(o,UTILS.COLLECTION_ARCHIVO);
          }
         return  "FIRMANDO";
     }
@@ -102,7 +103,7 @@ public class Services {
             if(req.getHeader("Authorization").split(",").length>1) {
                 o.put("tenant", req.getHeader("Authorization").split(",")[1]);
             }
-            f.actualizarGarantias(o);
+            f.update(o,UTILS.COLLECTION_ARCHIVO);
         }
         //f.actualizarGarantias(stringBuilder.toString());
         return  "FIRMANDO";
@@ -117,7 +118,7 @@ public class Services {
         if(req.getHeader("Authorization").split(",").length>1) {
             criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
         }
-        return f.getGarantias(criterial);
+        return f.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
     }
     @GET
     @Consumes(MediaType.APPLICATION_JSON)

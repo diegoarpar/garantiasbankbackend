@@ -8,10 +8,7 @@ import com.itec.configuration.ConfigurationExample;
 import com.itec.oauth.Autenticator;
 import com.itec.oauth.Autorization;
 import com.itec.pojo.User;
-import com.itec.services.ConfigServices;
-import com.itec.services.SearchServices;
-import com.itec.services.Services;
-import com.itec.services.UploadServices;
+import com.itec.services.*;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
@@ -56,8 +53,7 @@ public class Garantias extends  Application<ConfigurationExample> {
         e.jersey().register(SearchServices.class);
         e.jersey().register(ConfigServices.class);
         e.jersey().register(UploadServices.class);
-
-        e.jersey().register(UploadServices.class);
+        e.jersey().register(TRDServices.class);
 
 
         e.jersey().register(new AuthDynamicFeature(

@@ -2,6 +2,7 @@ package com.itec.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itec.db.FactoryMongo;
+import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -16,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+
+import static com.sun.corba.se.spi.logging.CORBALogDomains.UTIL;
 
 /**
  * Created by root on 14/06/16.
@@ -42,7 +45,7 @@ public class ConfigServices {
         if(req.getHeader("Authorization").split(",").length>1) {
             criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
         }
-        return fm.getGarantiasFields(criterial);
+        return fm.retrive(criterial,UTILS.COLLECTION_ARCHIVOS_DATOS);
     }
 
     @DELETE
@@ -53,7 +56,7 @@ public class ConfigServices {
     public String removeGarantiasFiled(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         fillCriterialFromString(req.getQueryString());
-        fm.deleteGarantiasFields(criterial);
+        fm.delete(criterial,UTILS.COLLECTION_ARCHIVOS_DATOS);
         return "Elimiando";
     }
     @POST
@@ -71,7 +74,7 @@ public class ConfigServices {
         br.close();
         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
         for(HashMap o : criterialList){
-            fm.insertGarantiasFields(o);
+            fm.insert(o, UTILS.COLLECTION_ARCHIVOS_DATOS);
         }
         return  "FIRMANDO";
     }
@@ -85,8 +88,9 @@ public class ConfigServices {
     @PermitAll
     public List<DBObject> getGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
-        fillCriterialFromString(req.getQueryString());
-        return fm.getGarantiasParametricValues(criterial);
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
+        return fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
     }
 
     @DELETE
@@ -97,7 +101,7 @@ public class ConfigServices {
     public String removeGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         fillCriterialFromString(req.getQueryString());
-        fm.deleteParametricValues(criterial);
+        fm.delete(criterial,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
         return "Elimiando";
     }
 
@@ -116,7 +120,7 @@ public class ConfigServices {
         br.close();
         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
         for(HashMap o : criterialList){
-            fm.insertGarantiasParametricValues(o);
+            fm.insert(o,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
         }
 
         return  "FIRMANDO";
