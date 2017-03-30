@@ -19,16 +19,21 @@ public class UTILS {
     public static final String COLLECTION_ARCHIVOS_TRD = "archivo_trd";
     public static final String COLLECTION_ARCHIVO_PARAMETRICS_VALUES = "archivo_parametrics_values";
     public static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
+    public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
+    public static final String COLLECTION_METADATA = "archivo_metadata";
 
-    public static ArrayList<HashMap<String, String>> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap<String, String>> criterialList){
+    public static ArrayList<HashMap<String, DBObject>> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap<String, DBObject>> criterialList){
         criterialList.clear();
 
+
+
         for(String s : dbList.keySet()){
-            criterial.clear();
+            criterial = new HashMap();
             DBObject dbObject =((BasicDBObject) JSON.parse(dbList.get(s).toString()));
-            for(String o : dbObject.keySet()){
+            criterial.put("json",dbObject);
+            /*for(String o : dbObject.keySet()){
                 criterial.put(o,dbObject.get(o).toString());
-            }
+            }*/
             criterialList.add(criterial);
         }
         return criterialList;

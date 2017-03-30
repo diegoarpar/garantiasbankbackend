@@ -4,6 +4,7 @@ import com.itec.db.FactoryMongo;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.util.JSON;
 
 import javax.annotation.security.PermitAll;
@@ -19,12 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by iTech on 19/03/2017.
+ * Created by iTech on 26/03/2017.
  */
 
-@Path("/garantias/trd")
+@Path("/garantias/regional")
 @Produces(MediaType.APPLICATION_JSON)
-public class TRDServices {
+public class RegionalServices {
+
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
     ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
@@ -33,9 +35,10 @@ public class TRDServices {
     @PermitAll
     public List<DBObject> get(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
-        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial= UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
-        return fm.retrive(criterial,UTILS.COLLECTION_ARCHIVOS_TRD);
+            return fm.retrive(criterial,UTILS.COLLECTION_REGIONAL);
+
     }
 
     @DELETE
@@ -46,7 +49,7 @@ public class TRDServices {
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        fm.delete(criterial, UTILS.COLLECTION_ARCHIVOS_TRD);
+        fm.delete(criterial, UTILS.COLLECTION_REGIONAL);
         return "Elimiando";
     }
     @POST
@@ -64,31 +67,14 @@ public class TRDServices {
         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
-            fm.insert(o, UTILS.COLLECTION_ARCHIVOS_TRD);
+                HashMap aux = new HashMap();
+                aux=UTILS.getTenant(req,aux);
+                aux.put("key",o.get("key"));
+            try{
+                fm.delete(aux,UTILS.COLLECTION_REGIONAL);
+            }catch (Exception e){}
+                fm.insert(o, UTILS.COLLECTION_REGIONAL);
         }
         return  "FIRMANDO";
     }
-
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @PermitAll
-    @Path("/retrive")
-    public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
-        HashMap o=criterialList.get(0);
-            o=UTILS.getTenant(req,o);
-            return fm.retrive(o, UTILS.COLLECTION_ARCHIVOS_TRD);
-
-
-    }
-
 }

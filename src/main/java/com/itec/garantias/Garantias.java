@@ -54,6 +54,8 @@ public class Garantias extends  Application<ConfigurationExample> {
         e.jersey().register(ConfigServices.class);
         e.jersey().register(UploadServices.class);
         e.jersey().register(TRDServices.class);
+        e.jersey().register(RegionalServices.class);
+        e.jersey().register(MetadataServices.class);
 
 
         e.jersey().register(new AuthDynamicFeature(

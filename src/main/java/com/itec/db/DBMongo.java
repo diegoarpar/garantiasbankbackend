@@ -31,7 +31,9 @@ public class DBMongo {
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
+
+            //searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
+            searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
         }
 
         collection.insert(searchQuery2);
@@ -48,7 +50,7 @@ public class DBMongo {
         _id = (BasicDBObject) JSON.parse(searchQuery2.get("_id").toString());
 
         ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
-        searchQuery2.remove("_id");
+        //searchQuery2.remove("_id");
         collection.update(new BasicDBObject("_id", o),searchQuery2);
 
     }
@@ -60,8 +62,10 @@ public class DBMongo {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
-            it.remove();
+            //searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
+
+            //it.remove();
+            searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
         }
 
         //BasicDBObject searchQuery2  = new BasicDBObject();
@@ -76,9 +80,13 @@ public class DBMongo {
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
+            try{
+                searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
+            }catch (Exception e){
 
-            searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
-            it.remove();
+                searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
+            }
+            //it.remove();
         }
 
         //BasicDBObject searchQuery2  = new BasicDBObject();
