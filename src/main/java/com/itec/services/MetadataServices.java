@@ -66,6 +66,31 @@ public class MetadataServices {
         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
         HashMap aux = new HashMap();
         aux=UTILS.getTenant(req,aux);
+
+        for(HashMap o : criterialList){
+            BasicDBObject temp = (BasicDBObject) o.get("json");
+            temp = (BasicDBObject) o.get("json");
+            o=UTILS.getTenant(req,o);
+            fm.insert(o, UTILS.COLLECTION_METADATA);
+        }
+        return  "FIRMANDO";
+    }
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/savechanges")
+    public String insertAll(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        HashMap aux = new HashMap();
+        aux=UTILS.getTenant(req,aux);
         try{
             List<DBObject> tem = fm.retriveAll(aux,UTILS.COLLECTION_METADATA);
             for(DBObject db : tem){
@@ -84,4 +109,24 @@ public class MetadataServices {
         return  "FIRMANDO";
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/retrive")
+    public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o, UTILS.COLLECTION_METADATA);
+
+
+    }
 }
