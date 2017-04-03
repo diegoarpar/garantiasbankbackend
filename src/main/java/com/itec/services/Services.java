@@ -35,7 +35,7 @@ public class Services {
 
     FactoryMongo f = new FactoryMongo();
         HashMap<String, String> criterial= new HashMap<>();
-    ArrayList<HashMap<String, String>> criterialList= new ArrayList<>();
+    ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
      @RolesAllowed("ADMIN")
      @POST
      @Path("/insertGarantias")
@@ -50,12 +50,11 @@ public class Services {
             }
             br.close();
 
-         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+
 
          for(HashMap o : criterialList){
-             if(req.getHeader("Authorization").split(",").length>1) {
-                 o.put("tenant", req.getHeader("Authorization").split(",")[1]);
-             }
+             o=UTILS.getTenant(req,o);
              f.insert(o, UTILS.COLLECTION_ARCHIVO);
          }
             return  "[{realizado:\"ok\"}]";
@@ -73,12 +72,10 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
-         fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
 
          for(HashMap o : criterialList){
-             if(req.getHeader("Authorization").split(",").length>1) {
-                 o.put("tenant", req.getHeader("Authorization").split(",")[1]);
-             }
+             o=UTILS.getTenant(req,o);
              f.update(o,UTILS.COLLECTION_ARCHIVO);
          }
         return  "FIRMANDO";
@@ -97,12 +94,10 @@ public class Services {
             stringBuilder.append(read);
         }
         br.close();
-        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
 
         for(HashMap o : criterialList){
-            if(req.getHeader("Authorization").split(",").length>1) {
-                o.put("tenant", req.getHeader("Authorization").split(",")[1]);
-            }
+            o=UTILS.getTenant(req,o);
             f.update(o,UTILS.COLLECTION_ARCHIVO);
         }
         //f.actualizarGarantias(stringBuilder.toString());
@@ -114,10 +109,9 @@ public class Services {
     @Path("/insertGarantias")
     @PermitAll
     public  List<DBObject> getGarantias(@Context HttpServletRequest req) throws IOException {
-        fillCriterialFromString(req.getQueryString());
-        if(req.getHeader("Authorization").split(",").length>1) {
-            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
-        }
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+
+        criterial=UTILS.getTenant(req,criterial);
         return f.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
     }
     @GET
@@ -134,26 +128,5 @@ public class Services {
         return "[{\"number\":\""+dateFormat.format(d)+"\"}]";
     }
 
-    private void fillCriterialListFromDBOBject(BasicDBList dbList){
-        criterialList.clear();
 
-        for(String s : dbList.keySet()){
-            criterial= new HashMap<>();
-            DBObject dbObject =((BasicDBObject) JSON.parse(dbList.get(s).toString()));
-            for(String o : dbObject.keySet()){
-                criterial.put(o,dbObject.get(o).toString());
-            }
-            criterialList.add(criterial);
-        }
-
-    }
-    private void fillCriterialFromString( String queryString){
-        criterial.clear();
-        if(queryString!=null)
-        for (String split : queryString.split("&")) {
-            if (split.split("=").length == 2) {
-                criterial.put(split.split("=")[0], split.split("=")[1]);
-            }
-        }
-    }
 }

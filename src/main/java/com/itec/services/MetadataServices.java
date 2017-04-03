@@ -48,6 +48,7 @@ public class MetadataServices {
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
         fm.delete(criterial, UTILS.COLLECTION_METADATA);
         return "Elimiando";
     }

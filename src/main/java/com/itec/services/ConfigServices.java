@@ -31,7 +31,7 @@ import static com.sun.corba.se.spi.logging.CORBALogDomains.UTIL;
 public class ConfigServices {
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
-    ArrayList<HashMap<String, String>> criterialList= new ArrayList<>();
+    ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
 
 
 
@@ -41,10 +41,9 @@ public class ConfigServices {
     @PermitAll
     public List<DBObject> getGarantiasFiled(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
-        fillCriterialFromString(req.getQueryString());
-        if(req.getHeader("Authorization").split(",").length>1) {
-            criterial.put("tenant", req.getHeader("Authorization").split(",")[1]);
-        }
+
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
         return fm.retrive(criterial,UTILS.COLLECTION_ARCHIVOS_DATOS);
     }
 
@@ -54,8 +53,8 @@ public class ConfigServices {
     @Path("/garantias-field/{id}")
     @PermitAll
     public String removeGarantiasFiled(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
-        criterial.clear();
-        fillCriterialFromString(req.getQueryString());
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
         fm.delete(criterial,UTILS.COLLECTION_ARCHIVOS_DATOS);
         return "Elimiando";
     }
@@ -72,8 +71,9 @@ public class ConfigServices {
             stringBuilder.append(read);
         }
         br.close();
-        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial,criterialList);
         for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
             fm.insert(o, UTILS.COLLECTION_ARCHIVOS_DATOS);
         }
         return  "FIRMANDO";
@@ -100,7 +100,8 @@ public class ConfigServices {
     @PermitAll
     public String removeGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
-        fillCriterialFromString(req.getQueryString());
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
         fm.delete(criterial,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
         return "Elimiando";
     }
@@ -118,8 +119,9 @@ public class ConfigServices {
             stringBuilder.append(read);
         }
         br.close();
-        fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()));
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial,criterialList);
         for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
             fm.insert(o,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
         }
 
@@ -128,29 +130,5 @@ public class ConfigServices {
 
 
 
-    /*OTHER METHOD*/
-    private void fillCriterialListFromDBOBject(BasicDBList dbList){
-        criterialList.clear();
 
-        for(String s : dbList.keySet()){
-            criterial.clear();
-            DBObject dbObject =((BasicDBObject) JSON.parse(dbList.get(s).toString()));
-            for(String o : dbObject.keySet()){
-                criterial.put(o,dbObject.get(o).toString());
-            }
-            criterialList.add(criterial);
-        }
-
-    }
-
-
-    private void fillCriterialFromString( String queryString){
-        criterial.clear();
-        if(queryString!=null)
-            for (String split : queryString.split("&")) {
-                if (split.split("=").length == 2) {
-                    criterial.put(split.split("=")[0], split.split("=")[1]);
-                }
-            }
-    }
 }
