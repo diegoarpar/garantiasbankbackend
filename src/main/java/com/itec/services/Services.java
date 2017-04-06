@@ -34,7 +34,7 @@ import javax.ws.rs.core.MediaType;
 public class Services {
 
     FactoryMongo f = new FactoryMongo();
-        HashMap<String, String> criterial= new HashMap<>();
+        HashMap<String, DBObject> criterial= new HashMap<>();
     ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
      @RolesAllowed("ADMIN")
      @POST
@@ -128,5 +128,24 @@ public class Services {
         return "[{\"number\":\""+dateFormat.format(d)+"\"}]";
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/retrive")
+    public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return f.retrive(o, UTILS.COLLECTION_ARCHIVO);
 
+
+    }
 }

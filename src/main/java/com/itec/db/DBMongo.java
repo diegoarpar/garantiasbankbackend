@@ -45,10 +45,10 @@ public class DBMongo {
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            searchQuery2.append(pair.getKey().toString(),pair.getValue()!=null?pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString():null);
+            searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
         }
-        _id = (BasicDBObject) JSON.parse(searchQuery2.get("_id").toString());
-
+        _id=(BasicDBObject)JSON.parse(searchQuery2.get("_id").toString());
+        searchQuery2.remove("_id");
         ObjectId o =new ObjectId((int)_id.get("timestamp"), (int)_id.get("machineIdentifier"), (short)(int)_id.get("processIdentifier"), (int)_id.get("counter"));
         //searchQuery2.remove("_id");
         collection.update(new BasicDBObject("_id", o),searchQuery2);
