@@ -19,7 +19,7 @@ public class CallToken {
     public static void isValidToken(String token, String tenant) throws IOException {
         try {
 
-            URL url = new URL(ConfigurationExample.URLAUTENTICATION+"insert-database/isValidToken?token="+token+"&tenant="+tenant);
+            URL url = new URL(ConfigurationExample.URLAUTENTICATION+"token?token="+token+"&tenant="+tenant);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");

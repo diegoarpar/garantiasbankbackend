@@ -13,12 +13,8 @@ import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.setup.Environment;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.EnumSet;
-import java.util.Locale;
-import java.util.TimeZone;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -36,7 +32,6 @@ public class Garantias extends  Application<ConfigurationExample> {
        if(args.length > 0) new Garantias().run(args);
        else{
         new Garantias().run(new String[] { "server","./src/main/java/com/itec/garantias/config.yml" });
-           System.err.println("qui");
        }
     }
 
@@ -49,7 +44,7 @@ public class Garantias extends  Application<ConfigurationExample> {
         configureCors(e);
 
         e.jersey().register(MultiPartFeature.class);
-        e.jersey().register(Services.class);
+        e.jersey().register(GarantiasServices.class);
         e.jersey().register(SearchServices.class);
         e.jersey().register(ConfigServices.class);
         e.jersey().register(UploadServices.class);

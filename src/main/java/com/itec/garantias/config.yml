@@ -4,7 +4,7 @@ databaseuser: certi
 databasepass: certi123
 databasename: garantiasdb
 databasurlserver: localhost
-urlAutentication: http://localhost:2022/
+urlAutentication: http://localhost:2022/autentication/
 
 defaultName: ${DW_DEFAULT_NAME:-Stranger}
 

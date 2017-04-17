@@ -31,26 +31,19 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/garantias")
 @Produces(MediaType.APPLICATION_JSON)
-public class Services {
+public class GarantiasServices {
 
     FactoryMongo f = new FactoryMongo();
-        HashMap<String, DBObject> criterial= new HashMap<>();
+    HashMap<String, DBObject> criterial= new HashMap<>();
     ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
+    String postString="";
      @RolesAllowed("ADMIN")
      @POST
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
-            req.getParameterMap();
-            StringBuilder stringBuilder = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-            String read;
-            while((read=br.readLine()) != null) {
-                stringBuilder.append(read);
-            }
-            br.close();
-
-         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+         postString=UTILS.fillStringFromRequestPost(req);
+         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
 
 
          for(HashMap o : criterialList){
@@ -65,14 +58,8 @@ public class Services {
      @Path("/updateGarantias")
      @PermitAll
     public String updateGarantias2(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+         postString=UTILS.fillStringFromRequestPost(req);
+         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
 
          for(HashMap o : criterialList){
              o=UTILS.getTenant(req,o);
@@ -87,14 +74,8 @@ public class Services {
     @Path("/insertGarantias")
     @PermitAll
     public String updateGarantias(@Context HttpServletRequest req,@PathParam("id") String id) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        postString=UTILS.fillStringFromRequestPost(req);
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
 
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);

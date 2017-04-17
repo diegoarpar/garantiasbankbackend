@@ -6,6 +6,10 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +63,18 @@ public class UTILS {
         }
         criterial.put("tenant",tenant);
         return  criterial;
+    }
+
+    public static String fillStringFromRequestPost (@Context HttpServletRequest req) throws IOException {
+        req.getParameterMap();
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while ((read = br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        return stringBuilder.toString();
     }
 
 }
