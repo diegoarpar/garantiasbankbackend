@@ -21,11 +21,21 @@ public class User implements Principal{
     private String password;
     @JsonProperty
     private String token;
+    @JsonProperty
+    private String autorization;
 
-    public User(String user, Token t, String password) {
+    public User(String user, String autorization, String password) {
         this.user=user;
         this.password=password;
-        this.token=t.getToken();
+        this.autorization=autorization;
+    }
+
+    public String getAutorization() {
+        return autorization;
+    }
+
+    public void setAutorization(String autorization) {
+        this.autorization = autorization;
     }
 
     public User() {

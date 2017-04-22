@@ -9,20 +9,24 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Created by root on 11/06/16.
  */
-public class CallToken {
+public class CallServices {
 
 
-    public static void isValidToken(String token, String tenant) throws IOException {
+    public static String callGetServices( String autorization, String servicesName,HashMap<String,String> parameters ) throws IOException {
+        String outputReturn="";
+        String output="";
         try {
 
-            URL url = new URL(ConfigurationExample.URLAUTENTICATION+"token?token="+token+"&tenant="+tenant);
+            URL url = UrlFactory.getUrl(servicesName,parameters);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Authorization", "Bearer "+autorization);
 
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
@@ -32,10 +36,10 @@ public class CallToken {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
-            String output;
-            System.out.println("Output from Server .... \n");
+            //System.out.println("Output from Server .... \n");
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
+                //System.out.println(output);
+                outputReturn+=output;
             }
 
             conn.disconnect();
@@ -49,5 +53,6 @@ public class CallToken {
             e.printStackTrace();
 
         }
+        return  outputReturn;
     }
 }

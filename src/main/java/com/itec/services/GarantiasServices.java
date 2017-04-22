@@ -5,10 +5,8 @@
 package com.itec.services;
 
 import com.itec.db.FactoryMongo;
-import com.itec.oauth.CallToken;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 

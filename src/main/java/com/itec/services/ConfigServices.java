@@ -9,6 +9,7 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -38,7 +39,8 @@ public class ConfigServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-field")
-    @PermitAll
+    @RolesAllowed({"ADMIN","CONFIG_BODEGA"})
+
     public List<DBObject> getGarantiasFiled(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
 
@@ -51,7 +53,7 @@ public class ConfigServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-field/{id}")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String removeGarantiasFiled(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
@@ -62,7 +64,7 @@ public class ConfigServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-field")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String insertGarantiasFiled(@Context HttpServletRequest req) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -85,7 +87,7 @@ public class ConfigServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public List<DBObject> getGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
@@ -97,7 +99,7 @@ public class ConfigServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues/delete/")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String removeGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
@@ -110,7 +112,7 @@ public class ConfigServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String insertGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));

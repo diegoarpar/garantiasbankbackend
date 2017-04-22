@@ -9,7 +9,11 @@ import com.google.common.base.Optional;
 import com.itec.db.FactoryMongo;
 import com.itec.pojo.Token;
 import com.itec.pojo.User;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 import io.dropwizard.auth.Authorizer;
+
+import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 
@@ -23,20 +27,20 @@ public class Autorization implements Authorizer<User> {
 
     @Override
     public boolean authorize(User u, String role) {
-        System.out.println(role);
-        FactoryMongo  f= new FactoryMongo();
-         String token = UUID.randomUUID().toString();
-         Token t = new Token();
-         t.setToken(token);
-        if (token.equals("35b6b8202ca92164151af7e2d7ea667b6bf01968d28400899fd1f0cdc5f51aa1")){
-            Response.status(Response.Status.ACCEPTED);
-            return  true;
-            
+        try{
+            String rta = CallServices.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
+            List<DBObject> roles = (List<DBObject>) JSON.parse(rta);
+            String [] rolesToSearch =role.split(",");
+            for(int i=0;i<rolesToSearch.length;i++){
+                for(int j=0;j<roles.size();j++){
+                    if(rolesToSearch[i].equals(roles.get(j).get("rol").toString())){
+                        return true;
+                    }
+                }
+            }
+        }catch (Exception e){
+
         }
-         //if(f.isValidUser(u)){
-         //    f.insertToken(t, u);
-         //    return true;
-         //}
-        return true;
+        return false;
     }
 }
