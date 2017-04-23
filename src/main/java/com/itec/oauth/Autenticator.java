@@ -5,8 +5,9 @@
  */
 package com.itec.oauth;
 
-import java.util.Optional;
 
+
+import java.util.Optional;
 import com.itec.pojo.User;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
@@ -19,10 +20,16 @@ import java.io.IOException;
  */
 public class Autenticator implements Authenticator<String, User>{
     @Override
-    public Optional<User> authenticate(String token) throws AuthenticationException {
+    public Optional<User> authenticate(String autorization) throws AuthenticationException {
         try {
-            CallServices.callGetServices(token,UrlFactory.IS_VALID_TOKEN,null);
-            return  Optional.of(new User("diego",token,"123"));
+            String token="";
+            int length=autorization.split(",").length;
+            if(length>0) {token=autorization.split(",")[0];}
+            if(token==null){return Optional.empty(); }
+            if(token.length()<10){return Optional.empty(); }
+
+            CallServices.callGetServices(autorization,UrlFactory.IS_VALID_TOKEN,null);
+            return  Optional.of(new User("diego",autorization,"123"));
         } catch (IOException e) {
             e.printStackTrace();
         }
