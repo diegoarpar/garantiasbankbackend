@@ -96,7 +96,7 @@ public class GarantiasServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/getNumber")
-    @RolesAllowed("DIEGOROLE")
+    @RolesAllowed("ADMIN")
     public  String getNumber() throws IOException {
 
         Date d = new Date();

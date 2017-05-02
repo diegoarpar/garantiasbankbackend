@@ -23,6 +23,7 @@ public class CallServices {
         try {
 
             URL url = UrlFactory.getUrl(servicesName,parameters);
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
