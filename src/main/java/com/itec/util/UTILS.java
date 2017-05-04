@@ -18,7 +18,9 @@ import java.util.List;
  * Created by iTech on 19/03/2017.
  */
 public class UTILS {
+    //get menu list and sublist
     public static final String COLLECTION_ARCHIVO = "archivo";
+    public static final String COLLECTION_MENU = "menu";
     public static final String COLLECTION_ARCHIVOS_DATOS = "archivo_fields";
     public static final String COLLECTION_ARCHIVOS_TRD = "archivo_trd";
     public static final String COLLECTION_ARCHIVO_PARAMETRICS_VALUES = "archivo_parametrics_values";
