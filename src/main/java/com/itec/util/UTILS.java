@@ -4,15 +4,12 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import org.bson.types.ObjectId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by iTech on 19/03/2017.
@@ -28,6 +25,8 @@ public class UTILS {
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
     public static final String COLLECTION_METADATA = "archivo_metadata";
 
+    private static HashMap temp = new HashMap();
+    private static DBObject obj = new BasicDBObject();
     public static ArrayList<HashMap<String, DBObject>> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap<String, DBObject>> criterialList){
         criterialList.clear();
 
@@ -47,6 +46,28 @@ public class UTILS {
     }
 
 
+    public static HashMap tryJson( HashMap criterial){
+        temp.clear();
+        obj= new BasicDBObject();
+        try {
+            Iterator it = criterial.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                if(pair.getKey().toString().equals("_id")){
+                    if(generateObjectid(pair.getValue().toString()).isPresent()){
+
+                        obj.put(pair.getKey().toString(), generateObjectid(pair.getValue().toString()).get());
+                    }
+                }else
+                obj.put(pair.getKey().toString(), pair.getValue());
+            }
+            criterial.clear();
+            criterial.put("json",obj);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return criterial;
+    }
     public static HashMap fillCriterialFromString( String queryString, HashMap criterial){
         criterial.clear();
         if(queryString!=null)
@@ -78,5 +99,32 @@ public class UTILS {
         br.close();
         return stringBuilder.toString();
     }
+    public static ObjectId generateObjectid(String timeStamp, String machineIdentifier, String processIdentifier, String counter ){
+        return new ObjectId(Integer.parseInt(timeStamp),
+                Integer.parseInt(machineIdentifier),
+                (short)Integer.parseInt(processIdentifier),
+                Integer.parseInt(counter));
 
+    }
+    public static Optional generateObjectid(String  objectId){
+       try{
+           return Optional.of(new ObjectId(objectId));
+       }catch (Exception e){
+       }
+        return Optional.empty();
+
+
+    }
+
+    public static void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) throws IOException {
+        int read;
+        final int BUFFER_LENGTH = 1024;
+        final byte[] buffer = new byte[BUFFER_LENGTH];
+        OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
+        while ((read = uploadedInputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+        out.flush();
+        out.close();
+    }
 }

@@ -5,7 +5,7 @@
  */
 package com.itec.db;
 
-import com.itec.configuration.ConfigurationExample;
+import com.itec.configuration.ConfigurationApp;
 import com.itec.pojo.*;
 import com.itec.util.UTILS;
 import com.mongodb.DB;
@@ -67,8 +67,8 @@ public class FactoryMongo {
             collection=collection+"_"+tenant;
             c.remove("tenant");
         }
-        return getCollection(collection, ConfigurationExample.DATABASE_USER,ConfigurationExample.DATABASE_PASS,
-                ConfigurationExample.DATABASE_SERVER_URL,ConfigurationExample.DATABASE_NAME);
+        return getCollection(collection, ConfigurationApp.DATABASE_USER, ConfigurationApp.DATABASE_PASS,
+                ConfigurationApp.DATABASE_SERVER_URL, ConfigurationApp.DATABASE_NAME);
     }
 
 
@@ -109,15 +109,6 @@ public class FactoryMongo {
         return dbP.searchMetadata(getCollection(UTILS.COLLECTION_ARCHIVO,criterial), criterial2, startDate, endDate, word);
     }
 
-    public void saveFileUpload(HashMap criterial,InputStream uploadedInputStream, String location, String fileName, ObjectId garid){
-        dbP.saveFileUpload(getCollection(UTILS.COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, uploadedInputStream,location,fileName, garid);
-    }
 
-    public GridFSDBFile retrieveFileUpload(HashMap criterial, String fileName){
-        return dbP.retrieveFileUpload(getCollection(UTILS.COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, fileName);
-    }
 
-    public List<DBObject> retrieveListOfFiles(ObjectId garid, HashMap criterial){
-        return dbP.retrieveListOfFiles(getCollection(UTILS.COLLECTION_ARCHIVO_DOCUMENTS,criterial), database, garid);
-    }
 }

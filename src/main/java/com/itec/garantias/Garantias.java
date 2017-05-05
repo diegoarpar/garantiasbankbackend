@@ -4,7 +4,7 @@
  */
 package com.itec.garantias;
 
-import com.itec.configuration.ConfigurationExample;
+import com.itec.configuration.ConfigurationApp;
 import com.itec.oauth.Autenticator;
 import com.itec.oauth.Autorization;
 import com.itec.pojo.User;
@@ -25,7 +25,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
  *
  * @author iTech-Pc
  */
-public class Garantias extends  Application<ConfigurationExample> {
+public class Garantias extends  Application<ConfigurationApp> {
 
        public static void main (String[] args) throws Exception{
 
@@ -37,7 +37,7 @@ public class Garantias extends  Application<ConfigurationExample> {
 
 
     @Override
-    public void run(ConfigurationExample t, Environment e) throws Exception {
+    public void run(ConfigurationApp t, Environment e) throws Exception {
         t.getTemplate();
         t.getDefaultName();
         t.getFilePath();

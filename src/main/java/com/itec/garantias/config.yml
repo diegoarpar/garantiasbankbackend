@@ -1,38 +1,18 @@
 template: Hello, %s!
 filePath: D:/temp/
+appUser: diego
+appPassword: 66695246e3731fbfb72e3e2370c51f4ffa90ba5f37fe2bfe6b3576346e7402ed
 databaseuser: certi
 databasepass: certi123
 databasename: garantiasdb
 databasurlserver: localhost
 urlAutentication: http://localhost:2022/autentication/
+urlCMS: http://localhost:2024/CMS/
 
 defaultName: ${DW_DEFAULT_NAME:-Stranger}
 
-# Database settings.
-#database:
-
-  # the name of your JDBC driver
-#  driverClass: org.h2.Driver
-
-  # the username
-#  user: sa
-
-  # the password
-#  password: sa
-
-  # the JDBC URL
-#  url: jdbc:h2:./target/example
-
-# use the simple server factory if you only want to run on a single port
-#server:
-#  type: simple
-#  connector:
-#    type: http
-#    port: 8080
 
 server:
-#  softNofileLimit: 1000
-#  hardNofileLimit: 1000
   applicationConnectors:
     - type: http
       port: 2020

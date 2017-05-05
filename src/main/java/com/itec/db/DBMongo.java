@@ -7,16 +7,13 @@ package com.itec.db;
 
 import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.*;
-import com.mongodb.client.FindIterable;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 import org.adrianwalker.multilinestring.Multiline;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -83,6 +80,7 @@ public class DBMongo {
             try{
                 searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
             }catch (Exception e){
+
 
                 searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
             }
@@ -236,48 +234,8 @@ public class DBMongo {
 
     }
 
-    public List saveFileUpload(DBCollection dbCollection, DB dataBase,  InputStream uploadedInputStream,
-                               String location, String fileName, ObjectId garId){
-        GridFS gridfs = new GridFS(dataBase, "downloads");
-        GridFSInputFile gfsFile = gridfs.createFile(uploadedInputStream);
-        gfsFile.setFilename(fileName);
-        gfsFile.save();
-        //
-        // Let's create a new JSON document with some "metadata" information on the download
-        //
-        BasicDBObject info = new BasicDBObject();
-        info.put("fileName", fileName);
-        info.put("rawPath", location);
 
 
-        info.put("garid", garId);
 
-        //
-        // Let's store our document to MongoDB
-        //
-        dbCollection.insert(info, WriteConcern.SAFE);
-
-        return null;
-    }
-
-    public GridFSDBFile retrieveFileUpload(DBCollection dbCollection, DB dataBase,  String fileName){
-        GridFS gridfs = new GridFS(dataBase, "downloads");
-        // get image file by it's filename
-        GridFSDBFile imageForOutput = gridfs.findOne(fileName);
-        return imageForOutput;
-    }
-
-    public List<DBObject> retrieveListOfFiles(DBCollection dbCollection, DB dataBase,  ObjectId garId){
-        BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.put("garid", garId);
-
-        DBCursor curs = dbCollection.find(whereQuery);
-        ArrayList<DBObject> files = new ArrayList<>();
-        while (curs.hasNext()) {
-            files.add(curs.next());
-
-        }
-        return files;
-    }
 
 }

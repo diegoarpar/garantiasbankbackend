@@ -8,21 +8,13 @@ import com.itec.db.FactoryMongo;
 import com.itec.pojo.HashMapKeyValue;
 import com.mongodb.DBObject;
 import org.adrianwalker.multilinestring.Multiline;
-import sun.misc.IOUtils;
 
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

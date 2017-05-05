@@ -6,7 +6,6 @@
 package com.itec.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itec.pojo.NameValuePair;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 import java.io.IOException;
@@ -23,12 +22,12 @@ public class ProbarJson {
         try {
             ObjectMapper mapper = new ObjectMapper();
             String postData = "{\"name\":\"pais\", \"value\":\"Colombia\"}";
-            NameValuePair obj = mapper.readValue(postData, NameValuePair.class);
+            //NameValuePair obj = mapper.readValue(postData, NameValuePair.class);
             BasicDBObject document =(BasicDBObject) JSON.parse(postData);
-            System.out.println(obj.getName() + " - "+obj.getValue() );
+            //System.out.println(obj.getName() + " - "+obj.getValue() );
             FactoryMongo f = new FactoryMongo();
             //f.insertDigtalizacion(postData);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ProbarJson.class.getName()).log(Level.SEVERE, null, ex);
         }
     

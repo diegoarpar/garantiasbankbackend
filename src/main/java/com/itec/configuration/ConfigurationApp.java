@@ -8,13 +8,16 @@ import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class ConfigurationExample extends Configuration {
+public class ConfigurationApp extends Configuration {
     public static String DATABASE_NAME="";
     public static String DATABASE_USER="";
     public static String DATABASE_PASS="";
     public static String UPLOAD_FILE_PATH="";
     public static String DATABASE_SERVER_URL="";
     public static String URLAUTENTICATION="";
+    public static String APP_USER="";
+    public static String APP_PASSWORD="";
+    public static String URL_CMS="";
 
 
     @NotEmpty
@@ -31,6 +34,12 @@ public class ConfigurationExample extends Configuration {
     private String template;
     @NotEmpty
     private  String urlAutentication;
+    @NotEmpty
+    private  String urlCMS;
+    @NotEmpty
+    private  String appUser;
+    @NotEmpty
+    private  String appPassword;
 
     @NotEmpty
     private String defaultName = "Stranger";
@@ -111,5 +120,32 @@ public class ConfigurationExample extends Configuration {
     @JsonProperty public  void setUrlAutentication(String urlAutentication){
         URLAUTENTICATION=urlAutentication;
         this.urlAutentication=urlAutentication;
+    }
+    @JsonProperty("urlCMS")
+    public  String getUrlCMS(){
+        return urlCMS;
+    }
+    @JsonProperty ("urlCMS")
+    public  void setUrlCMS(String urlCMS){
+        URL_CMS=urlCMS;
+        this.urlCMS=urlCMS;
+    }
+    @JsonProperty("appPassword")
+    public  String getAppPassword(){
+        return appPassword;
+    }
+    @JsonProperty ("appPassword")
+    public  void setAppPassword(String parameter){
+        APP_PASSWORD=parameter;
+        this.appPassword=parameter;
+    }
+    @JsonProperty("appUser")
+    public  String getAppUser(){
+        return appUser;
+    }
+    @JsonProperty ("appUser")
+    public  void setAppUser(String parameter){
+        APP_USER=parameter;
+        this.appUser=parameter;
     }
 }
