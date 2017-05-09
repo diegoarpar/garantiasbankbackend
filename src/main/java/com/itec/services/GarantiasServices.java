@@ -35,8 +35,9 @@ public class GarantiasServices {
     HashMap<String, DBObject> criterial= new HashMap<>();
     ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
     String postString="";
-     @RolesAllowed("ADMIN")
+     @RolesAllowed("ADMIN,ADMIN_BODEGA,USER_BODEGA")
      @POST
+     @Produces(MediaType.APPLICATION_JSON)
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
@@ -48,7 +49,7 @@ public class GarantiasServices {
              o=UTILS.getTenant(req,o);
              f.insert(o, UTILS.COLLECTION_ARCHIVO);
          }
-            return  "[{realizado:\"ok\"}]";
+            return  "[{\"realizado\":\"ok\"}]";
         }
      @POST
      @Produces(MediaType.TEXT_PLAIN)
