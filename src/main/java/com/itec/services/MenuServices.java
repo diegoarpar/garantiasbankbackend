@@ -36,7 +36,7 @@ public class MenuServices {
         criterial.clear();
         criterial= UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
-            return fm.retrive(criterial,UTILS.COLLECTION_REGIONAL);
+            return fm.retrive(criterial,UTILS.COLLECTION_MENU);
 
     }
 
@@ -48,7 +48,7 @@ public class MenuServices {
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        fm.delete(criterial, UTILS.COLLECTION_REGIONAL);
+        fm.delete(criterial, UTILS.COLLECTION_MENU);
         return "Elimiando";
     }
     @POST
@@ -70,9 +70,9 @@ public class MenuServices {
                 aux=UTILS.getTenant(req,aux);
                 aux.put("key",o.get("key"));
             try{
-                fm.delete(aux,UTILS.COLLECTION_REGIONAL);
+                fm.delete(aux,UTILS.COLLECTION_MENU);
             }catch (Exception e){}
-                fm.insert(o, UTILS.COLLECTION_REGIONAL);
+                fm.insert(o, UTILS.COLLECTION_MENU);
         }
         return  "FIRMANDO";
     }
