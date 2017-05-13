@@ -3,6 +3,7 @@ package com.itec.services;
 import com.itec.db.FactoryMongo;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
@@ -68,7 +69,9 @@ public class MenuServices {
             o=UTILS.getTenant(req,o);
                 HashMap aux = new HashMap();
                 aux=UTILS.getTenant(req,aux);
-                aux.put("key",o.get("key"));
+                DBObject object = new BasicDBObject();
+                        object.put("user",((DBObject)(o.get("json"))).get("user"));
+                aux.put("json",object);
             try{
                 fm.delete(aux,UTILS.COLLECTION_MENU);
             }catch (Exception e){}
