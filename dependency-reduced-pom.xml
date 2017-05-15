@@ -11,8 +11,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <compilerArguments>
             <endorseddirs>${endorsed.dir}</endorseddirs>
           </compilerArguments>
@@ -106,13 +106,6 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-forms</artifactId>
-      <version>1.0.0-rc3</version>
-      <type>pom</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
@@ -126,7 +119,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <dropwizard.version>1.0.0-rc3</dropwizard.version>
+    <dropwizard.version>0.9.0</dropwizard.version>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

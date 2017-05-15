@@ -7,7 +7,8 @@ package com.itec.oauth;
 
 
 
-import java.util.Optional;
+
+import com.google.common.base.Optional;
 import com.itec.pojo.User;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
@@ -25,15 +26,20 @@ public class Autenticator implements Authenticator<String, User>{
             String token="";
             int length=autorization.split(",").length;
             if(length>0) {token=autorization.split(",")[0];}
-            if(token==null){return Optional.empty(); }
-            if(token.length()<10){return Optional.empty(); }
+            if(token==null){return Optional.absent(); }
+            if(token.length()<10){return Optional.absent(); }
 
-            CallServices.callGetServices(autorization,UrlFactory.IS_VALID_TOKEN,null);
+            String rta = CallServices.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
+            int cont=0;
+            do{
+                cont++;
+                rta = CallServices.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
+            }while(rta.equals("ERROR")&&cont<10);
             return  Optional.of(new User("diego",autorization,"123"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+        return Optional.absent();
 
     }
 

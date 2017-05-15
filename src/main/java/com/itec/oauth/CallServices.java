@@ -18,25 +18,31 @@ import java.util.HashMap;
  */
 public class CallServices {
 
+
+    private static URL url;
+    private static HttpURLConnection conn;
     private static BasicDBList objt;
+    private static BufferedReader br;
+    private static OutputStream os;
     public static String callGetServices( String autorization, String servicesName,HashMap<String,String> parameters ) throws IOException {
         String outputReturn="";
         String output="";
         try {
 
-            URL url = UrlFactory.getUrl(servicesName,parameters);
+            url = UrlFactory.getUrl(servicesName,parameters);
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", "Bearer "+autorization);
 
             if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
+                System.out.println("Error al llamar el servicio "+url.toString());
+                System.out.println("respuesta del servicio "+conn.getResponseCode());
+                return "ERROR";
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
+            br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
             //System.out.println("Output from Server .... \n");
@@ -63,9 +69,9 @@ public class CallServices {
         String output="";
         try {
 
-            URL url = UrlFactory.getUrl(servicesName,null);
+            url = UrlFactory.getUrl(servicesName,null);
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Accept", "application/json");
@@ -75,17 +81,17 @@ public class CallServices {
             objt= new BasicDBList();
             objt.add((BasicDBObject)parameters.get("json"));
 
-            OutputStream os = conn.getOutputStream();
+            os = conn.getOutputStream();
             os.write(objt.toString().getBytes());
             os.flush();
 
             if (conn.getResponseCode() != 200) {
-                System.out.println("Error al llamar al servicio "+url.toString() );
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
+                System.out.println("Error al llamar el servicio "+url.toString());
+                System.out.println("respuesta del servicio "+conn.getResponseCode());
+                return "ERROR";
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
+            br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
             //System.out.println("Output from Server .... \n");

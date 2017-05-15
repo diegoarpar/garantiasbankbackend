@@ -31,17 +31,15 @@ public class Garantias extends  Application<ConfigurationApp> {
 
        if(args.length > 0) new Garantias().run(args);
        else{
-        new Garantias().run(new String[] { "server","./src/main/java/com/itec/garantias/config.yml" });
+        new Garantias().run(new String[] { "server","./src/main/java/com/itec/garantias/configGarBackEnd.yml" });
        }
     }
 
 
     @Override
     public void run(ConfigurationApp t, Environment e) throws Exception {
-        t.getTemplate();
-        t.getDefaultName();
-        t.getFilePath();
-        configureCors(e);
+
+           configureCors(e);
 
         e.jersey().register(MultiPartFeature.class);
         e.jersey().register(GarantiasServices.class);
