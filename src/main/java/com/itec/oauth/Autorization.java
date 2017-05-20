@@ -24,15 +24,17 @@ import javax.ws.rs.core.Response;
  */
 public class Autorization implements Authorizer<User> {
     FactoryMongo f = new FactoryMongo();
+    private CallServices cs = new CallServices();
 
     @Override
     public boolean authorize(User u, String role) {
         try{
-            String rta = CallServices.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
+            String rta = cs.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
             int cont=0;
+            if(rta.equals("ERROR"))
             do{
                 cont++;
-                rta = CallServices.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
+                rta = cs.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
             }while(rta.equals("ERROR")&&cont<10);
             List<DBObject> roles = (List<DBObject>) JSON.parse(rta);
             String [] rolesToSearch =role.split(",");

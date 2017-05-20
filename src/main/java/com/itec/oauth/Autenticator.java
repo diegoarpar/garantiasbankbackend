@@ -20,6 +20,7 @@ import java.io.IOException;
  * @author iTech-Pc
  */
 public class Autenticator implements Authenticator<String, User>{
+    private CallServices cs = new CallServices();
     @Override
     public Optional<User> authenticate(String autorization) throws AuthenticationException {
         try {
@@ -29,11 +30,12 @@ public class Autenticator implements Authenticator<String, User>{
             if(token==null){return Optional.absent(); }
             if(token.length()<10){return Optional.absent(); }
 
-            String rta = CallServices.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
+            String rta = cs.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
             int cont=0;
+            if(rta.equals("ERROR"))
             do{
                 cont++;
-                rta = CallServices.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
+                rta = cs.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
             }while(rta.equals("ERROR")&&cont<10);
             return  Optional.of(new User("diego",autorization,"123"));
         } catch (IOException e) {

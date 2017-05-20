@@ -19,19 +19,18 @@ import java.util.HashMap;
 public class CallServices {
 
 
-    private static URL url;
-    private static HttpURLConnection conn;
+
     private static BasicDBList objt;
     private static BufferedReader br;
     private static OutputStream os;
-    public static String callGetServices( String autorization, String servicesName,HashMap<String,String> parameters ) throws IOException {
+    public  String callGetServices( String autorization, String servicesName,HashMap<String,String> parameters ) throws IOException {
         String outputReturn="";
         String output="";
         try {
 
-            url = UrlFactory.getUrl(servicesName,parameters);
+            URL url = UrlFactory.getUrl(servicesName,parameters);
 
-            conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", "Bearer "+autorization);
@@ -39,9 +38,10 @@ public class CallServices {
             if (conn.getResponseCode() != 200) {
                 System.out.println("Error al llamar el servicio "+url.toString());
                 System.out.println("respuesta del servicio "+conn.getResponseCode());
+                //conn.disconnect();
                 return "ERROR";
             }
-
+            br=null;
             br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
@@ -51,7 +51,7 @@ public class CallServices {
                 outputReturn+=output;
             }
 
-            conn.disconnect();
+            //conn.disconnect();
 
         } catch (MalformedURLException e) {
 
@@ -64,14 +64,14 @@ public class CallServices {
         }
         return  outputReturn;
     }
-    public static String callPostServices( String autorization, String servicesName,HashMap parameters ) throws IOException {
+    public String callPostServices( String autorization, String servicesName,HashMap parameters ) throws IOException {
         String outputReturn="";
         String output="";
         try {
 
-            url = UrlFactory.getUrl(servicesName,null);
+            URL url = UrlFactory.getUrl(servicesName,null);
 
-            conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Accept", "application/json");
@@ -88,9 +88,10 @@ public class CallServices {
             if (conn.getResponseCode() != 200) {
                 System.out.println("Error al llamar el servicio "+url.toString());
                 System.out.println("respuesta del servicio "+conn.getResponseCode());
+                conn.disconnect();
                 return "ERROR";
             }
-
+            br=null;
             br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
@@ -100,7 +101,7 @@ public class CallServices {
                 outputReturn+=output;
             }
 
-            conn.disconnect();
+            //conn.disconnect();
 
         } catch (MalformedURLException e) {
 

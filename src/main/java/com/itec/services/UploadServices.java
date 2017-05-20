@@ -32,6 +32,7 @@ import java.util.List;
 @Path("/garantias/upload")
 @Produces(MediaType.APPLICATION_JSON)
 public class UploadServices {
+    private CallServices cs = new CallServices();
     FactoryMongo fm = new FactoryMongo();
     HashMap criterial= new HashMap<>();
     @POST
@@ -52,7 +53,7 @@ public class UploadServices {
         criterial.clear();
         criterial.put("garid",o);
         criterial.put("fileName", fileDetail.getFileName());
-        String rta = CallServices.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
+        String rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
         BasicDBObject obj= (BasicDBObject) ((BasicDBList) JSON.parse(rta)).get(0);
         obj.put("fileName",fileDetail.getFileName());
         obj.put("garid",o);
