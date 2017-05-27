@@ -1,5 +1,6 @@
 package com.itec.util;
 
+import com.google.common.base.Optional;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -111,7 +112,7 @@ public class UTILS {
            return Optional.of(new ObjectId(objectId));
        }catch (Exception e){
        }
-        return Optional.empty();
+        return Optional.absent();
 
 
     }
