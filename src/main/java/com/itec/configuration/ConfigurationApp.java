@@ -4,6 +4,8 @@
  */
 package com.itec.configuration;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -147,5 +149,16 @@ public class ConfigurationApp extends Configuration {
     public  void setAppUser(String parameter){
         APP_USER=parameter;
         this.appUser=parameter;
+    }
+    private static MongoClient mongoClient = null;
+    public static MongoClient getMongoClient(String user, String pass, String url, String dataBase) {
+        if (mongoClient == null ) {
+            mongoClient = new MongoClient(new MongoClientURI("mongodb://" + user + ":" + pass + "@" + url + ":27017/?authSource=" + dataBase + "&authMechanism=MONGODB-CR"));
+        }else if (mongoClient.isLocked()){
+            mongoClient = new MongoClient(new MongoClientURI("mongodb://" + user + ":" + pass + "@" + url + ":27017/?authSource=" + dataBase + "&authMechanism=MONGODB-CR"));
+
+        }
+
+        return mongoClient;
     }
 }

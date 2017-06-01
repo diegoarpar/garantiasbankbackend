@@ -38,12 +38,7 @@ public class FactoryMongo {
     }
 
     public MongoClient getMongoClient(String user, String pass, String url, String dataBase){
-        if(mongoClient==null){
-            //mongoClient = new MongoClient(new MongoClientURI("mongodb://"+MONGO_SERVER));
-            //mongoClient = new MongoClient(new MongoClientURI("mongodb://certi:Certi123@10.130.186.221:27017/?authSource=reportestelefonica&authMechanism=MONGODB-CR"));
-            mongoClient = new MongoClient(
-                    new MongoClientURI("mongodb://"+user+":"+pass+"@"+url+":27017/?authSource="+dataBase+"&authMechanism=MONGODB-CR"));
-        }
+        mongoClient=ConfigurationApp.getMongoClient(user,pass,url,dataBase               );
         return mongoClient;
     }
 
