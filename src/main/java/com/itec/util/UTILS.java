@@ -25,6 +25,7 @@ public class UTILS {
     public static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
     public static final String COLLECTION_METADATA = "archivo_metadata";
+    public static final String COLLECTION_REPORT = "archivo_report";
 
     private static HashMap temp = new HashMap();
     private static DBObject obj = new BasicDBObject();
