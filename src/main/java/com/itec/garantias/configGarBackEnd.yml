@@ -13,6 +13,10 @@ defaultName: ${DW_DEFAULT_NAME:-Stranger}
 
 
 server:
+  gzip:
+    bufferSize: 8KiB
+    enabled: true
+    
   applicationConnectors:
     - type: http
       port: 2020

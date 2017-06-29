@@ -19,6 +19,8 @@ import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.message.GZipEncoder;
+import org.glassfish.jersey.server.filter.EncodingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 /**
@@ -50,6 +52,9 @@ public class Garantias extends  Application<ConfigurationApp> {
         e.jersey().register(RegionalServices.class);
         e.jersey().register(MetadataServices.class);
         e.jersey().register(MenuServices.class);
+        e.jersey().register(ReportServices.class);
+        e.jersey().register(GZipEncoder.class);
+        e.jersey().register(EncodingFilter.class);
 
 
         e.jersey().register(new AuthDynamicFeature(
@@ -67,9 +72,10 @@ public class Garantias extends  Application<ConfigurationApp> {
         filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, e.getApplicationContext().getContextPath() + "*");
         filter.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
         filter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-        filter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, Authorization");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, Authorization, Accept-Encoding");
         filter.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
-    }
+
+       }
 }
 
 
