@@ -20,9 +20,10 @@ import java.io.IOException;
  * @author iTech-Pc
  */
 public class Autenticator implements Authenticator<String, User>{
-    private CallServices cs = new CallServices();
+
     @Override
     public Optional<User> authenticate(String autorization) throws AuthenticationException {
+        CallServices cs = new CallServices();
         try {
             String token="";
             int length=autorization.split(",").length;
@@ -37,10 +38,12 @@ public class Autenticator implements Authenticator<String, User>{
                 cont++;
                 rta = cs.callGetServices(autorization, UrlFactory.IS_VALID_TOKEN,null);
             }while(rta.equals("ERROR")&&cont<10);
+            cs=null;
             return  Optional.of(new User("diego",autorization,"123"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        cs=null;
         return Optional.absent();
 
     }

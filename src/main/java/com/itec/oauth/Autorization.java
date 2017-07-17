@@ -23,11 +23,11 @@ import javax.ws.rs.core.Response;
  * @author iTech-Pc
  */
 public class Autorization implements Authorizer<User> {
-    FactoryMongo f = new FactoryMongo();
-    private CallServices cs = new CallServices();
+
 
     @Override
     public boolean authorize(User u, String role) {
+        CallServices cs = new CallServices();
         try{
             String rta = cs.callGetServices(u.getAutorization(),UrlFactory.GET_ROLES,null);
             int cont=0;
@@ -41,6 +41,7 @@ public class Autorization implements Authorizer<User> {
             for(int i=0;i<rolesToSearch.length;i++){
                 for(int j=0;j<roles.size();j++){
                     if(rolesToSearch[i].equals(roles.get(j).get("rol").toString())){
+                        cs=null;
                         return true;
                     }
                 }
@@ -48,6 +49,7 @@ public class Autorization implements Authorizer<User> {
         }catch (Exception e){
 
         }
+        cs=null;
         return false;
     }
 }
