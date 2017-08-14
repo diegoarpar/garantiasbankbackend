@@ -28,30 +28,22 @@ import java.util.List;
  */
 public class FactoryMongo {
 
-    private MongoClient mongoClient =null;
-    private DB database =null ;
-    private DBCursor curs;
-
-    DBMongo dbP= new DBMongo();
 
     public FactoryMongo() {
     }
 
-    public MongoClient getMongoClient(String user, String pass, String url, String dataBase){
-        mongoClient=ConfigurationApp.getMongoClient(user,pass,url,dataBase               );
-        return mongoClient;
+    public MongoClient getMongoClient(){
+        return ConfigurationApp.getMongoClient(ConfigurationApp.DATABASE_USER, ConfigurationApp.DATABASE_PASS,
+                ConfigurationApp.DATABASE_SERVER_URL,ConfigurationApp.DATABASE_NAME);
     }
 
-    public DB getDatabase(String dataBase){
-        database=mongoClient.getDB(dataBase);
-        return database;
+    public DB getDatabase(){
+        return getMongoClient().getDB(ConfigurationApp.DATABASE_NAME);
+
     }
 
-
-    public DBCollection getCollection(String name, String user, String pass, String url, String dataBase){
-        getMongoClient(user,pass,url,dataBase);
-        getDatabase(dataBase);
-        return database.getCollection(name);
+    public DBCollection getCollection(String collectionName){
+        return getDatabase().getCollection(collectionName);
     }
 
     public DBCollection getCollection(String collection,HashMap c){
@@ -62,46 +54,41 @@ public class FactoryMongo {
             collection=collection+"_"+tenant;
             c.remove("tenant");
         }
-        return getCollection(collection, ConfigurationApp.DATABASE_USER, ConfigurationApp.DATABASE_PASS,
-                ConfigurationApp.DATABASE_SERVER_URL, ConfigurationApp.DATABASE_NAME);
+        return getCollection(collection);
     }
 
 
     public void update(HashMap c, String collection){
-
-        dbP.updateGarantias(getCollection(collection,c), curs, mongoClient, c);
+        ConfigurationApp.dbm.updateGarantias(getCollection(collection,c),  getMongoClient(), c);
 
     }
     public List<DBObject> retrive(HashMap c, String collection){
-
-        return dbP.getGarantiasCriterial(getCollection(collection,c), curs, mongoClient, c);
+        return ConfigurationApp.dbm.getGarantiasCriterial(getCollection(collection,c),  getMongoClient(), c);
 
     }
     public List<DBObject> retriveAll(HashMap c, String collection){
-
-        return dbP.getAll(getCollection(collection,c), curs, mongoClient, c);
+        return ConfigurationApp.dbm.getAll(getCollection(collection,c),  getMongoClient(), c);
 
     }
 
     public void insert(HashMap c, String collection){
-
-        dbP.insertGarantias(getCollection(collection,c), curs, mongoClient, c);
+        ConfigurationApp.dbm.insertGarantias(getCollection(collection,c),  getMongoClient(), c);
 
     }
 
 
     public void delete(HashMap c, String collection){
-        dbP.removeGarantias(getCollection(collection,c), curs, mongoClient, c);
+        ConfigurationApp.dbm.removeGarantias(getCollection(collection,c),  getMongoClient(), c);
     }
 
     public List<DBObject> getMetadata(HashMap c){
-        return dbP.getListMetadata(getCollection(UTILS.COLLECTION_ARCHIVO,c), database, c);
+        return ConfigurationApp.dbm.getListMetadata(getCollection(UTILS.COLLECTION_ARCHIVO,c), getDatabase(), c);
     }
 
 
 
     public List<DBObject> searchWithMetadata(HashMap criterial, ArrayList<HashMapKeyValue> criterial2, Long startDate, Long endDate, String word){
-        return dbP.searchMetadata(getCollection(UTILS.COLLECTION_ARCHIVO,criterial), criterial2, startDate, endDate, word);
+        return ConfigurationApp.dbm.searchMetadata(getCollection(UTILS.COLLECTION_ARCHIVO,criterial), criterial2, startDate, endDate, word);
     }
 
 

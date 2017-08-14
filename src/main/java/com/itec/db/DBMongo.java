@@ -23,7 +23,7 @@ import java.util.*;
  */
 
 public class DBMongo {
-    public void insertGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+    public void insertGarantias(DBCollection collection,MongoClient mongoClient, HashMap criterial){
         BasicDBObject searchQuery2  = new BasicDBObject();
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
@@ -36,7 +36,7 @@ public class DBMongo {
         collection.insert(searchQuery2);
 
     }
-    public void updateGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+    public void updateGarantias(DBCollection collection,MongoClient mongoClient, HashMap criterial){
         BasicDBObject _id  = new BasicDBObject();
         BasicDBObject searchQuery2  = new BasicDBObject();
         Iterator it = criterial.entrySet().iterator();
@@ -51,7 +51,7 @@ public class DBMongo {
         collection.update(new BasicDBObject("_id", o),searchQuery2);
 
     }
-    public String removeGarantias(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+    public String removeGarantias(DBCollection collection,MongoClient mongoClient, HashMap criterial){
 
         List<DBObject> data= new ArrayList<>();
         BasicDBObject searchQuery2  = new BasicDBObject();
@@ -71,7 +71,8 @@ public class DBMongo {
         return "eliminado";
     }
 
-    public List<DBObject> getGarantiasCriterial(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+    public List<DBObject> getGarantiasCriterial(DBCollection collection,MongoClient mongoClient, HashMap criterial){
+        DBCursor curs;
         List<DBObject> data= new ArrayList<>();
         BasicDBObject searchQuery2  = new BasicDBObject();
         Iterator it = criterial.entrySet().iterator();
@@ -96,9 +97,9 @@ public class DBMongo {
             }
         return data;
     }
-    public List<DBObject> getAll(DBCollection collection,DBCursor curs,MongoClient mongoClient, HashMap criterial){
+    public List<DBObject> getAll(DBCollection collection,MongoClient mongoClient, HashMap criterial){
         List<DBObject> data= new ArrayList<>();
-
+        DBCursor curs;
         curs=collection.find();
 
         while(curs.hasNext()) {

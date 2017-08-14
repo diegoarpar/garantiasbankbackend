@@ -88,7 +88,7 @@
     <orderEntry type="module-library">
       <library name="Maven: sun.jdk:tools:LATEST">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../developer/jdk1.8.0_131/lib/tools.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../Java/jdk1.7.0_21/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

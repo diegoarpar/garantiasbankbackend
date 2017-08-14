@@ -4,6 +4,8 @@
  */
 package com.itec.configuration;
 
+import com.itec.db.DBMongo;
+import com.itec.db.FactoryMongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import io.dropwizard.Configuration;
@@ -161,4 +163,5 @@ public class ConfigurationApp extends Configuration {
 
         return mongoClient;
     }
+    public static DBMongo dbm= new DBMongo();
 }

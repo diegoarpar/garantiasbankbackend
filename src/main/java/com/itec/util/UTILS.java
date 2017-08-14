@@ -27,8 +27,7 @@ public class UTILS {
     public static final String COLLECTION_METADATA = "archivo_metadata";
     public static final String COLLECTION_REPORT = "archivo_report";
 
-    private static HashMap temp = new HashMap();
-    private static DBObject obj = new BasicDBObject();
+
     public static ArrayList<HashMap<String, DBObject>> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap<String, DBObject>> criterialList){
         criterialList.clear();
 
@@ -49,8 +48,8 @@ public class UTILS {
 
 
     public static HashMap tryJson( HashMap criterial){
-        temp.clear();
-        obj= new BasicDBObject();
+        HashMap temp = new HashMap();
+        DBObject obj = new BasicDBObject();
         try {
             Iterator it = criterial.entrySet().iterator();
             while (it.hasNext()) {
