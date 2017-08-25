@@ -22,6 +22,7 @@ public class ConfigurationApp extends Configuration {
     public static String APP_USER="";
     public static String APP_PASSWORD="";
     public static String URL_CMS="";
+    public static String REPORT_PATH="";
 
 
     @NotEmpty
@@ -151,6 +152,11 @@ public class ConfigurationApp extends Configuration {
     public  void setAppUser(String parameter){
         APP_USER=parameter;
         this.appUser=parameter;
+    }
+
+    @JsonProperty ("reportPath")
+    public  void setReportPath(String parameter){
+        REPORT_PATH=parameter;
     }
     private static MongoClient mongoClient = null;
     public static MongoClient getMongoClient(String user, String pass, String url, String dataBase) {

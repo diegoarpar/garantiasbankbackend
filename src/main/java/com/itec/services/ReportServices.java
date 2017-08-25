@@ -1,5 +1,6 @@
 package com.itec.services;
 
+import com.itec.configuration.ConfigurationApp;
 import com.itec.db.FactoryMongo;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
@@ -9,6 +10,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -32,7 +34,7 @@ public class ReportServices {
     ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public List<DBObject> get(@Context HttpServletRequest req) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
@@ -44,7 +46,7 @@ public class ReportServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
@@ -54,7 +56,7 @@ public class ReportServices {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public String insert(@Context HttpServletRequest req) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -75,7 +77,7 @@ public class ReportServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/retrive")
     public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -94,10 +96,11 @@ public class ReportServices {
     }
     @GET
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @PermitAll
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/generate")
     public List<DBObject> generate(@Context HttpServletRequest req) throws IOException {
-        //JasperReport reporte = (JasperReport) JRLoader.loadObject("reporte1.jasper");
+        String pathReporte = ConfigurationApp.REPORT_PATH;
+        JasperReport reporte = (JasperReport) JRLoader.loadObject("reporte1.jasper");
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
