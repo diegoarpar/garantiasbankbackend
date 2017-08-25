@@ -5,6 +5,8 @@ import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -89,6 +91,17 @@ public class ReportServices {
             return fm.retrive(o, UTILS.COLLECTION_REPORT);
 
 
+    }
+    @GET
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @PermitAll
+    @Path("/generate")
+    public List<DBObject> generate(@Context HttpServletRequest req) throws IOException {
+        //JasperReport reporte = (JasperReport) JRLoader.loadObject("reporte1.jasper");
+        criterial.clear();
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
+        return fm.retrive(criterial,UTILS.COLLECTION_REPORT);
     }
 
 }
