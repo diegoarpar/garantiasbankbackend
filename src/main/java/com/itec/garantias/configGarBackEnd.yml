@@ -1,6 +1,6 @@
 template: Hello, %s!
 filePath: /home/itec/temp
-reportPath: /home/itec/temp
+reportPath: /home/itec/
 appUser: diego
 appPassword: 66695246e3731fbfb72e3e2370c51f4ffa90ba5f37fe2bfe6b3576346e7402ed
 databaseuser: certi

@@ -2,12 +2,16 @@ package com.itec.services;
 
 import com.itec.configuration.ConfigurationApp;
 import com.itec.db.FactoryMongo;
+import com.itec.util.MongoDbConnection;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import sun.net.ConnectionResetException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -15,12 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by iTech on 19/03/2017.
@@ -98,9 +101,28 @@ public class ReportServices {
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/generate")
-    public List<DBObject> generate(@Context HttpServletRequest req) throws IOException {
+    @PermitAll
+    public List<DBObject> generate(@Context HttpServletRequest req) throws IOException, JRException {
+        Thread.currentThread().getContextClassLoader();
+        Map<String, Object> reportParameters = new HashMap<String, Object>();
+        String fileName="garantias";
         String pathReporte = ConfigurationApp.REPORT_PATH;
-        JasperReport reporte = (JasperReport) JRLoader.loadObject("reporte1.jasper");
+        MongoDbConnection mongoDbConnection = new MongoDbConnection(fm.getMongoClient());
+
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        File jasperFile = new File(fileName+".jasper");
+        JasperCompileManager.compileReportToFile(
+                pathReporte+fileName+".jrxml",
+                pathReporte+fileName+"MongoDbReport.jasper");
+
+        InputStream url = new FileInputStream(pathReporte+fileName);
+
+
+                JasperReport jasperReport = JasperCompileManager.compileReport(url);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                reportParameters, mongoDbConnection);
+
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);

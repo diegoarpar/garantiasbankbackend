@@ -5,14 +5,19 @@
  */
 package com.itec.db;
 
+import com.itec.services.ReportServices;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.util.JSON;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import net.sf.jasperreports.engine.JRException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -85,4 +90,12 @@ public class ProbarJsonTest {
         BasicDBObject searchQuery2  = new BasicDBObject().append("processKey", "PROCESO PRUEBA");
                     searchQuery2.append("dateMigration",  BasicDBObjectBuilder.start("$gte", dateFormat.format(startDate)).add("$lte", dateFormat.format(endDate)).get());
     }
+    //@Test
+
+    public void testReportServices() throws IOException, JRException {
+        ReportServices rs = new ReportServices();
+        rs.generate(null);
+
+    }
+
 }
