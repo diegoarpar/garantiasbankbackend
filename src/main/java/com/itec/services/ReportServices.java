@@ -8,6 +8,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -97,36 +98,43 @@ public class ReportServices {
 
 
     }
-    @GET
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/generate")
-    @PermitAll
+    //@PermitAll
     public List<DBObject> generate(@Context HttpServletRequest req) throws IOException, JRException {
-        Thread.currentThread().getContextClassLoader();
-        Map<String, Object> reportParameters = new HashMap<String, Object>();
-        String fileName="garantias";
-        String pathReporte = ConfigurationApp.REPORT_PATH;
-        MongoDbConnection mongoDbConnection = new MongoDbConnection(fm.getMongoClient());
-
-        ClassLoader classLoader = getClass().getClassLoader();
-
-        File jasperFile = new File(fileName+".jasper");
-        JasperCompileManager.compileReportToFile(
-                pathReporte+fileName+".jrxml",
-                pathReporte+fileName+"MongoDbReport.jasper");
-
-        InputStream url = new FileInputStream(pathReporte+fileName);
-
-
-                JasperReport jasperReport = JasperCompileManager.compileReport(url);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
-                reportParameters, mongoDbConnection);
-
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
-        return fm.retrive(criterial,UTILS.COLLECTION_REPORT);
+        String sjson =fm.retrive(criterial,UTILS.COLLECTION_REPORT).toString();
+        /*String sjson = "{" +
+                "ENCABEZADO : [" +
+                "    {MATERIA:\"ESPAÑOL\",NUMEROAPROBADOS:\"123\",NUMEROREPLOBADOS:\"1\"}," +
+                "	{MATERIA:\"INGLES\",NUMEROAPROBADOS:\"120\",NUMEROREPLOBADOS:\"4\"}" +
+                "	],		" +
+                "DETALLES :[" +
+                "	{NOMBREALUMNO:\"GUADALUPE VICTORIA\",ESPAÑOL:\"10\",INGLES:\"9\"}," +
+                "	{NOMBREALUMNO:\"VICENTE GUERRERO\",ESPAÑOL:\"9\",INGLES:\"8\"}" +
+                "	]	" +
+                "}";*/
+
+        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
+        HashMap params = new HashMap();
+        //params.put("SUBREPORT_DIR", reportPath);
+        //params.put("jsongar", new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")),"jsongar"));
+        //params.put("dsDetalle", new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")),"DETALLES"));
+        JasperReport jasperReport=JasperCompileManager.compileReport(reporName);
+        JsonDataSource datasource = new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")));
+        JasperPrint objJasperPrint = JasperFillManager.fillReport( jasperReport, params, datasource );
+        byte[] exportReportToPdf = JasperExportManager.exportReportToPdf(objJasperPrint);
+
+        FileOutputStream pdf = new FileOutputStream(reporName + "prueba.pdf");
+        pdf.write(exportReportToPdf);
+        pdf.close();
+
+        return null;
     }
 
 }
