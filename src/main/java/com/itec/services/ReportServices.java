@@ -10,6 +10,7 @@ import com.mongodb.util.JSON;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.query.JsonQueryExecuterFactory;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import sun.net.ConnectionResetException;
@@ -20,11 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.InflaterInputStream;
 
 /**
  * Created by iTech on 19/03/2017.
@@ -100,41 +103,68 @@ public class ReportServices {
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/generate")
-    //@PermitAll
-    public List<DBObject> generate(@Context HttpServletRequest req) throws IOException, JRException {
+    public String generate(@Context HttpServletRequest req) throws IOException, JRException {
+
+        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
-        String sjson =fm.retrive(criterial,UTILS.COLLECTION_REPORT).toString();
-        /*String sjson = "{" +
-                "ENCABEZADO : [" +
-                "    {MATERIA:\"ESPAÑOL\",NUMEROAPROBADOS:\"123\",NUMEROREPLOBADOS:\"1\"}," +
-                "	{MATERIA:\"INGLES\",NUMEROAPROBADOS:\"120\",NUMEROREPLOBADOS:\"4\"}" +
-                "	],		" +
-                "DETALLES :[" +
-                "	{NOMBREALUMNO:\"GUADALUPE VICTORIA\",ESPAÑOL:\"10\",INGLES:\"9\"}," +
-                "	{NOMBREALUMNO:\"VICENTE GUERRERO\",ESPAÑOL:\"9\",INGLES:\"8\"}" +
-                "	]	" +
-                "}";*/
 
-        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
+
+        PrintWriter writer = new PrintWriter(reporName+".json", "UTF-8");
+        writer.println("[");
+        List<DBObject> retrive = fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
+        for (int i=0; i<retrive.size();i++) {
+           // o.removeField("_id");
+            //retrive.add(o);
+            writer.println(retrive.get(i).toString());
+            if((i+1)<retrive.size())
+                writer.println(",");
+        }
+        writer.println("]");
+        writer.close();
+
+
+
         HashMap params = new HashMap();
-        //params.put("SUBREPORT_DIR", reportPath);
-        //params.put("jsongar", new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")),"jsongar"));
-        //params.put("dsDetalle", new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")),"DETALLES"));
-        JasperReport jasperReport=JasperCompileManager.compileReport(reporName);
-        JsonDataSource datasource = new JsonDataSource(new ByteArrayInputStream(sjson.getBytes("UTF-8")));
+        JasperDesign jasperDesign = JRXmlLoader.load(reporName);
+        JasperReport jasperReport=JasperCompileManager.compileReport(jasperDesign);
+        params.put(JsonQueryExecuterFactory.JSON_INPUT_STREAM, new FileInputStream(reporName+".json"));
+
+        JsonDataSource datasource = new JsonDataSource(new File(reporName+".json"));
         JasperPrint objJasperPrint = JasperFillManager.fillReport( jasperReport, params, datasource );
+
         byte[] exportReportToPdf = JasperExportManager.exportReportToPdf(objJasperPrint);
 
         FileOutputStream pdf = new FileOutputStream(reporName + "prueba.pdf");
         pdf.write(exportReportToPdf);
         pdf.close();
+        System.out.println("GENERADO");
 
-        return null;
+        return "Generated";
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @Path("/retriveReport")
+    public Response getReport(@Context HttpServletRequest req) throws IOException, JRException {
+
+        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
+        InputStream stream =  new FileInputStream(reporName + "prueba.pdf");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int b;
+        while ((b = stream.read(buffer)) > -1) {
+            baos.write(buffer, 0, b);
+        }
+
+        return Response
+                .ok(baos.toByteArray(),MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition","filename = \"" + "prueba.pdf"+"\"")
+                .build();
     }
 
 }
