@@ -59,13 +59,9 @@ public class DBMongo {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            //searchQuery2.append(pair.getKey().toString(),pair.getValue().toString().equals("null")?null:pair.getValue().toString().equals("true")?true:pair.getValue().toString());
-
-            //it.remove();
             searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
         }
 
-        //BasicDBObject searchQuery2  = new BasicDBObject();
         collection.remove(searchQuery2);
 
         return "eliminado";

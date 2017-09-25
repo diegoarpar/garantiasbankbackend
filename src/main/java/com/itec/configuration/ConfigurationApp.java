@@ -23,6 +23,7 @@ public class ConfigurationApp extends Configuration {
     public static String APP_PASSWORD="";
     public static String URL_CMS="";
     public static String REPORT_PATH="";
+    public static String URL_BATCHER="";
 
 
     @NotEmpty
@@ -157,6 +158,10 @@ public class ConfigurationApp extends Configuration {
     @JsonProperty ("reportPath")
     public  void setReportPath(String parameter){
         REPORT_PATH=parameter;
+    }
+    @JsonProperty ("urlBatcher")
+    public  void setBatcherPath(String parameter){
+        URL_BATCHER=parameter;
     }
     private static MongoClient mongoClient = null;
     public static MongoClient getMongoClient(String user, String pass, String url, String dataBase) {

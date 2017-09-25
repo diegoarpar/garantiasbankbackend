@@ -33,7 +33,7 @@ public class GarantiasServices {
 
     FactoryMongo f = new FactoryMongo();
     HashMap<String, DBObject> criterial= new HashMap<>();
-    ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
+    ArrayList<HashMap> criterialList= new ArrayList<>();
     String postString="";
      @RolesAllowed("ADMIN,ADMIN_BODEGA,USER_BODEGA")
      @POST
@@ -114,14 +114,8 @@ public class GarantiasServices {
     @PermitAll
     @Path("/retrive")
     public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         HashMap o=criterialList.get(0);
         o=UTILS.getTenant(req,o);
         return f.retrive(o, UTILS.COLLECTION_ARCHIVO);

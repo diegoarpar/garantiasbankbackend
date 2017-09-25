@@ -29,7 +29,7 @@ public class MenuServices {
 
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
-    ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
+    ArrayList<HashMap> criterialList= new ArrayList<>();
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll

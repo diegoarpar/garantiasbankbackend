@@ -2,20 +2,19 @@ package com.itec.services;
 
 import com.itec.configuration.ConfigurationApp;
 import com.itec.db.FactoryMongo;
-import com.itec.util.MongoDbConnection;
+import com.itec.oauth.CallServices;
+import com.itec.oauth.UrlFactory;
 import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.query.JsonQueryExecuterFactory;
-import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import sun.net.ConnectionResetException;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -23,11 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.InflaterInputStream;
+import java.util.*;
 
 /**
  * Created by iTech on 19/03/2017.
@@ -37,8 +32,8 @@ import java.util.zip.InflaterInputStream;
 @Produces(MediaType.APPLICATION_JSON)
 public class ReportServices {
     FactoryMongo fm = new FactoryMongo();
-    HashMap<String, String> criterial= new HashMap<>();
-    ArrayList<HashMap<String, DBObject>> criterialList= new ArrayList<>();
+    HashMap criterial= new HashMap<>();
+    ArrayList<HashMap> criterialList= new ArrayList<>();
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
@@ -63,16 +58,24 @@ public class ReportServices {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/removePost")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    public String removePost(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        for (HashMap p: criterialList) {
+            p=UTILS.getTenant(req,p);
+            fm.delete(p, UTILS.COLLECTION_REPORT);
+        }
+
+        return "Elimiando";
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public String insert(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
             fm.insert(o, UTILS.COLLECTION_REPORT);
@@ -87,14 +90,8 @@ public class ReportServices {
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/retrive")
     public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         HashMap o=criterialList.get(0);
             o=UTILS.getTenant(req,o);
             return fm.retrive(o, UTILS.COLLECTION_REPORT);
@@ -117,8 +114,6 @@ public class ReportServices {
         writer.println("[");
         List<DBObject> retrive = fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
         for (int i=0; i<retrive.size();i++) {
-           // o.removeField("_id");
-            //retrive.add(o);
             writer.println(retrive.get(i).toString());
             if((i+1)<retrive.size())
                 writer.println(",");
@@ -141,7 +136,6 @@ public class ReportServices {
         FileOutputStream pdf = new FileOutputStream(reporName + "prueba.pdf");
         pdf.write(exportReportToPdf);
         pdf.close();
-        System.out.println("GENERADO");
 
         return "Generated";
     }
@@ -167,4 +161,61 @@ public class ReportServices {
                 .build();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @Path("/retriveReports")
+    public BasicDBList getReports(@Context HttpServletRequest req) throws IOException, JRException {
+        CallServices cs = new CallServices();
+          criterial.clear();
+          criterial.put("app","gar");
+          UTILS.getTenant(req,criterial);
+        return (BasicDBList)JSON.parse(cs.callPostServices(UTILS.getToken(req).replace("Bearer ","")+","+criterial.get("tenant"), UrlFactory.BATCHER_GET_REPORT,criterial));
+
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @Path("/sendBatcherReport")
+    public String sendBatcherReport(@Context HttpServletRequest req) throws IOException, JRException {
+        String reporName = ConfigurationApp.REPORT_PATH+ UUID.randomUUID().toString()+".json";
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        BasicDBObject dbo = (BasicDBObject)criterialList.get(1).get("json");
+        HashMap o=criterialList.get(0);
+
+        o=UTILS.getTenant(req,o);
+        List<DBObject> gars=fm.retrive(o, UTILS.COLLECTION_ARCHIVO);
+        PrintWriter writer = new PrintWriter(reporName, "UTF-8");
+        writer.println("[");
+        for (int i=0; i<gars.size();i++) {
+            writer.println(gars.get(i).toString());
+            if((i+1)<gars.size())
+                writer.println(",");
+        }
+        writer.println("]");
+        writer.close();
+
+
+
+        CallServices cs = new CallServices();
+        criterial.clear();
+        criterial.put("app","gar");
+        criterial.put("reportName",dbo.get("reportName").toString());
+        criterial.put("reportFileName",reporName);
+        criterial.put("description",dbo.get("description").toString());
+        criterial.put("generateDate",new Date().toString());
+        criterial.put("status","init");
+        criterial.put("batcherid",dbo.get("batcherid").toString());
+        criterial.put("path",ConfigurationApp.REPORT_PATH);
+        UTILS.getTenant(req,criterial);
+
+        cs.callPostServices(UTILS.getToken(req).replace("Bearer ","")+","+criterial.get("tenant"), UrlFactory.BATCHER_SET_JOB,criterial);
+
+
+
+        return "generando";
+
+    }
 }

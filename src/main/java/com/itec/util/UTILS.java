@@ -26,12 +26,11 @@ public class UTILS {
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
     public static final String COLLECTION_METADATA = "archivo_metadata";
     public static final String COLLECTION_REPORT = "archivo_report";
+    public static final String APPLICATION_NAME = "gar";
 
 
-    public static ArrayList<HashMap<String, DBObject>> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap<String, DBObject>> criterialList){
+    public static ArrayList<HashMap> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap> criterialList){
         criterialList.clear();
-
-
 
         for(String s : dbList.keySet()){
             criterial = new HashMap();
@@ -43,6 +42,13 @@ public class UTILS {
             criterialList.add(criterial);
         }
         return criterialList;
+
+    }
+    public static ArrayList<HashMap> fillCriterialListFromDBOBject(@Context HttpServletRequest req, HashMap criterial, ArrayList<HashMap> criterialList) throws IOException {
+        criterialList.clear();
+        BasicDBList dbList=(BasicDBList) JSON.parse(fillStringFromRequestPost(req));
+
+        return fillCriterialListFromDBOBject(dbList,criterial,criterialList);
 
     }
 
@@ -71,12 +77,15 @@ public class UTILS {
     }
     public static HashMap fillCriterialFromString( String queryString, HashMap criterial){
         criterial.clear();
+        BasicDBObject obj = new BasicDBObject();
         if(queryString!=null)
             for (String split : queryString.split("&")) {
                 if (split.split("=").length == 2) {
-                    criterial.put(split.split("=")[0], split.split("=")[1]);
+
+                    obj.append(split.split("=")[0],split.split("=")[1]);
                 }
             }
+        criterial.put("json",obj);
         return criterial;
     }
 
@@ -127,5 +136,14 @@ public class UTILS {
         }
         out.flush();
         out.close();
+    }
+
+    public static String getToken(@Context HttpServletRequest req) {
+        String autorization="";
+        if(req.getHeader("Authorization").split(",").length>1) {
+            autorization = req.getHeader("Authorization").split(",")[0];
+        }
+
+        return  autorization;
     }
 }
