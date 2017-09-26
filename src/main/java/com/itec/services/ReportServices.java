@@ -180,7 +180,8 @@ public class ReportServices {
     @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     @Path("/sendBatcherReport")
     public String sendBatcherReport(@Context HttpServletRequest req) throws IOException, JRException {
-        String reporName = ConfigurationApp.REPORT_PATH+ UUID.randomUUID().toString()+".json";
+        String fileName=UUID.randomUUID().toString()+".json";
+        String reporName = ConfigurationApp.REPORT_PATH+ fileName;
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject dbo = (BasicDBObject)criterialList.get(1).get("json");
         HashMap o=criterialList.get(0);
@@ -204,6 +205,7 @@ public class ReportServices {
         criterial.put("app","gar");
         criterial.put("reportName",dbo.get("reportName").toString());
         criterial.put("reportFileName",reporName);
+        criterial.put("reportFileInternalName",fileName);
         criterial.put("description",dbo.get("description").toString());
         criterial.put("generateDate",new Date().toString());
         criterial.put("status","init");
