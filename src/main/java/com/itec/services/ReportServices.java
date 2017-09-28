@@ -98,56 +98,19 @@ public class ReportServices {
 
 
     }
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
-    @Path("/generate")
-    public String generate(@Context HttpServletRequest req) throws IOException, JRException {
 
-        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
-        criterial.clear();
-        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        criterial=UTILS.getTenant(req,criterial);
-
-
-        PrintWriter writer = new PrintWriter(reporName+".json", "UTF-8");
-        writer.println("[");
-        List<DBObject> retrive = fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
-        for (int i=0; i<retrive.size();i++) {
-            writer.println(retrive.get(i).toString());
-            if((i+1)<retrive.size())
-                writer.println(",");
-        }
-        writer.println("]");
-        writer.close();
-
-
-
-        HashMap params = new HashMap();
-        JasperDesign jasperDesign = JRXmlLoader.load(reporName);
-        JasperReport jasperReport=JasperCompileManager.compileReport(jasperDesign);
-        params.put(JsonQueryExecuterFactory.JSON_INPUT_STREAM, new FileInputStream(reporName+".json"));
-
-        JsonDataSource datasource = new JsonDataSource(new File(reporName+".json"));
-        JasperPrint objJasperPrint = JasperFillManager.fillReport( jasperReport, params, datasource );
-
-        byte[] exportReportToPdf = JasperExportManager.exportReportToPdf(objJasperPrint);
-
-        FileOutputStream pdf = new FileOutputStream(reporName + "prueba.pdf");
-        pdf.write(exportReportToPdf);
-        pdf.close();
-
-        return "Generated";
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
-    @Path("/retriveReport")
+    @RolesAllowed({"ADMIN","CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @Path("/retrivereport")
     public Response getReport(@Context HttpServletRequest req) throws IOException, JRException {
 
-        String reporName = ConfigurationApp.REPORT_PATH+"garantias_idoneidad_json.jrxml";
-        InputStream stream =  new FileInputStream(reporName + "prueba.pdf");
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        BasicDBObject dbo = (BasicDBObject)criterialList.get(0).get("json");
+        String reporName = dbo.get("reportFileName").toString()+dbo.get("fileOutExtension").toString();
+        String outName= dbo.get("reportName").toString();
+        InputStream stream =  new FileInputStream(reporName );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int b;
@@ -157,7 +120,7 @@ public class ReportServices {
 
         return Response
                 .ok(baos.toByteArray(),MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition","filename = \"" + "prueba.pdf"+"\"")
+                .header("Content-Disposition","filename = \"" + outName+dbo.get("fileOutExtension").toString()+"\"")
                 .build();
     }
 
@@ -173,7 +136,18 @@ public class ReportServices {
         return (BasicDBList)JSON.parse(cs.callPostServices(UTILS.getToken(req).replace("Bearer ","")+","+criterial.get("tenant"), UrlFactory.BATCHER_GET_REPORT,criterial));
 
     }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @Path("/retriveReportsNotGenerated")
+    public BasicDBList getReportsNotGenerated(@Context HttpServletRequest req) throws IOException, JRException {
+        CallServices cs = new CallServices();
+        criterial.clear();
+        criterial.put("app","gar");
+        UTILS.getTenant(req,criterial);
+        return (BasicDBList)JSON.parse(cs.callPostServices(UTILS.getToken(req).replace("Bearer ","")+","+criterial.get("tenant"), UrlFactory.BATCHER_GET_NOT_GENERATED,criterial));
 
+    }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
@@ -209,7 +183,9 @@ public class ReportServices {
         criterial.put("description",dbo.get("description").toString());
         criterial.put("generateDate",new Date().toString());
         criterial.put("status","init");
-        criterial.put("batcherid",dbo.get("batcherid").toString());
+        criterial.put("batcher",dbo.get("batcher").toString());
+        criterial.put("template",dbo.get("template").toString());
+        criterial.put("fileOutExtension",dbo.get("fileOutExtension").toString());
         criterial.put("path",ConfigurationApp.REPORT_PATH);
         UTILS.getTenant(req,criterial);
 
