@@ -18,6 +18,7 @@ public class UrlFactory {
     public static final String INSERT_FILE="getCMSInserFile";
     public static final String AUTENTICATION="autentication";
     public static final String BATCHER_GET_REPORT="batcher";
+    public static final String BATCHER_GET_NOT_GENERATED="batchernotgenerated";
     public static final String BATCHER_SET_JOB="batchersetjob";
     public static URL getUrl(String url, HashMap<String,String> parameters) throws MalformedURLException{
 
@@ -37,6 +38,7 @@ public class UrlFactory {
             case GET_ROLES: return new URL(ConfigurationApp.URLAUTENTICATION+"roles"+query);
             case INSERT_FILE: return new URL(ConfigurationApp.URL_CMS+"FileToIndex/IndexId"+query);
             case BATCHER_GET_REPORT: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/retrivereports"+query);
+            case BATCHER_GET_NOT_GENERATED: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/retrivereportsnotgenerated"+query);
             case BATCHER_SET_JOB: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/setjob"+query);
             case AUTENTICATION: return new URL(ConfigurationApp.URLAUTENTICATION+"users/logIn"+query);
 
