@@ -48,7 +48,7 @@ public class ReportServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @RolesAllowed({"ADMIN","CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
@@ -59,7 +59,7 @@ public class ReportServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/removePost")
-    @RolesAllowed({"ADMIN,CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
+    @RolesAllowed({"ADMIN","CONFIG_BODEGA","USER_BODEGA","USER_REGIONAL"})
     public String removePost(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for (HashMap p: criterialList) {
