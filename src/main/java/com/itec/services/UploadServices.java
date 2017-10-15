@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by root on 14/06/16.
@@ -50,10 +51,38 @@ public class UploadServices {
 
             ) throws IOException {
 
+        criterial.clear();
+        UTILS.getTenant(req,criterial);
+        String fileId;
+        do{
+            criterial.remove("fileId");
+            fileId = UUID.randomUUID().toString();
+            criterial.put("fileId",fileId);
+
+        }while(fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS).size()>0);
+
+        BasicDBObject obj= new BasicDBObject();
+        obj.put("fileName",fileDetail.getFileName());
+        obj.put("internalName",fileId);
+        obj.put("fechaCarga",new Date());
+        obj.put("metadata",JSON.parse(metadata));
+        obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
+        obj.put("status","PENDIENTE");
+        criterial.clear();
+
+        UTILS.getTenant(req,criterial);
+        criterial.put("json",obj);
+        fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
+
+
+        String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + fileId;
+        UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
+
         ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
         criterial.clear();
         criterial.put("garid",o);
         criterial.put("fileName", fileDetail.getFileName());
+        criterial.put("internalName", fileId);
         criterial.put("metadata",JSON.parse(metadata));
         criterial.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
 
@@ -64,20 +93,6 @@ public class UploadServices {
              rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
 
         }while (rta.equals("ERROR")&&cont<10);
-        BasicDBObject obj= (BasicDBObject) ((BasicDBList) JSON.parse(rta)).get(0);
-        obj.put("fileName",fileDetail.getFileName());
-        obj.put("garid",o);
-        obj.put("fechaCarga",new Date());
-        obj.put("metadata",JSON.parse(metadata));
-        obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
-        obj.put("status","PENDIENTE");
-        criterial.clear();
-
-        UTILS.getTenant(req,criterial);
-        criterial.put("json",obj);
-        fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
-        String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + obj.get("fileId").toString();
-        UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
 
         return Response.ok().build();
     }
