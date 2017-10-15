@@ -70,6 +70,7 @@ public class UploadServices {
         obj.put("fechaCarga",new Date());
         obj.put("metadata",JSON.parse(metadata));
         obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
+        obj.put("status","PENDIENTE");
         criterial.clear();
 
         UTILS.getTenant(req,criterial);
