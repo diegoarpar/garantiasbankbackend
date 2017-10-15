@@ -70,13 +70,14 @@ public class UploadServices {
         obj.put("status","PENDIENTE");
         criterial.clear();
 
+        String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + fileId;
+        UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
+
         UTILS.getTenant(req,criterial);
         criterial.put("json",obj);
         fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
 
 
-        String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + fileId;
-        UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
 
         ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
         criterial.clear();
