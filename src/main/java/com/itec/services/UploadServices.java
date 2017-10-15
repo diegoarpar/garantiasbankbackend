@@ -89,11 +89,11 @@ public class UploadServices {
         criterial.put("metadata",JSON.parse(metadata));
         criterial.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
 
-        String rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
+        String rta ="ERROR";
         int cont=0;
         do{
              cont++;
-             rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
+             rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE_CENTRAL,criterial);
 
         }while (rta.equals("ERROR")&&cont<10);
 
