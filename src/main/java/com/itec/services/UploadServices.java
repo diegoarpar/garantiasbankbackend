@@ -51,6 +51,8 @@ public class UploadServices {
 
             ) throws IOException {
 
+        ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
+
         criterial.clear();
         UTILS.getTenant(req,criterial);
         String fileId;
@@ -68,6 +70,7 @@ public class UploadServices {
         obj.put("metadata",JSON.parse(metadata));
         obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
         obj.put("status","PENDIENTE");
+        obj.put("garid",o);
         criterial.clear();
 
         String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + fileId;
@@ -79,7 +82,6 @@ public class UploadServices {
 
 
 
-        ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
         criterial.clear();
         criterial.put("garid",o);
         criterial.put("fileName", fileDetail.getFileName());
