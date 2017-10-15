@@ -42,6 +42,7 @@ public class UploadServices {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @FormDataParam("fileName") String name,
+            @FormDataParam("metadata") String metadata,
             @FormDataParam("timestamp") String timestamp,
            @FormDataParam("machineIdentifier") String machineIdentifier,
            @FormDataParam("processIdentifier") String processIdentifier,
@@ -53,11 +54,22 @@ public class UploadServices {
         criterial.clear();
         criterial.put("garid",o);
         criterial.put("fileName", fileDetail.getFileName());
+        criterial.put("metadata",JSON.parse(metadata));
+        criterial.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
+
         String rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
+        int cont=0;
+        do{
+             cont++;
+             rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE,criterial);
+
+        }while (rta.equals("ERROR")&&cont<10);
         BasicDBObject obj= (BasicDBObject) ((BasicDBList) JSON.parse(rta)).get(0);
         obj.put("fileName",fileDetail.getFileName());
         obj.put("garid",o);
         obj.put("fechaCarga",new Date());
+        obj.put("metadata",JSON.parse(metadata));
+        obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
         criterial.clear();
 
         UTILS.getTenant(req,criterial);
