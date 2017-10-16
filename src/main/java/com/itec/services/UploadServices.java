@@ -52,7 +52,7 @@ public class UploadServices {
             ) throws IOException {
 
         ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
-        if(metadata==null){
+        if(metadata.equals("undefined")){
             metadata="[]";
         }
         criterial.clear();
