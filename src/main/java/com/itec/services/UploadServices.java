@@ -102,7 +102,7 @@ public class UploadServices {
 
         }while (rta.equals("ERROR")&&cont<10);
 
-        if(rta.equals("ERROR")) throw new IOException("Error comunicacion con indexador");
+        if(rta.equals("ERROR")) return Response.serverError().build();
         fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
 
         return Response.ok().build();
