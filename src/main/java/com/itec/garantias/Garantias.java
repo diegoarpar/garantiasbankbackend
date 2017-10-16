@@ -33,7 +33,7 @@ public class Garantias extends  Application<ConfigurationApp> {
 
        if(args.length > 0) new Garantias().run(args);
        else{
-        new Garantias().run(new String[] { "server","./configHA1.yml" });
+        new Garantias().run(new String[] { "server","./src/main/java/com/itec/garantias/configGarBackEnd.yml" });
        }
     }
 

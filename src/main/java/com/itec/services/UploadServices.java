@@ -51,6 +51,7 @@ public class UploadServices {
 
             ) throws IOException {
 
+        HashMap criterial2= new HashMap<>();
         ObjectId o = UTILS.generateObjectid(timestamp,machineIdentifier,processIdentifier,counter);
         if(metadata.equals("undefined")){
             metadata="[]";
@@ -80,26 +81,29 @@ public class UploadServices {
         UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
 
         UTILS.getTenant(req,criterial);
-        criterial.put("json",obj);
-        fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
+        criterial2.put("json",obj);
 
 
 
-        criterial.clear();
-        criterial.put("garid",o);
-        criterial.put("caseFolder",o);
-        criterial.put("fileName", fileDetail.getFileName());
-        criterial.put("internalName", fileId);
-        criterial.put("metadata",JSON.parse(metadata));
-        criterial.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
+
+        criterial2.clear();
+        criterial2.put("garid",o);
+        criterial2.put("caseFolder",o);
+        criterial2.put("fileName", fileDetail.getFileName());
+        criterial2.put("internalName", fileId);
+        criterial2.put("metadata",JSON.parse(metadata));
+        criterial2.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
 
         String rta ="ERROR";
         int cont=0;
         do{
              cont++;
-             rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE_CENTRAL,criterial);
+             rta = cs.callPostServices(req.getHeader("Authorization"), UrlFactory.INSERT_FILE_CENTRAL,criterial2);
 
         }while (rta.equals("ERROR")&&cont<10);
+
+        if(rta.equals("ERROR")) throw new IOException("Error comunicacion con indexador");
+        fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
 
         return Response.ok().build();
     }

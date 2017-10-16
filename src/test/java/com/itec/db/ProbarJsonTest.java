@@ -94,7 +94,7 @@ public class ProbarJsonTest {
 
     public void testReportServices() throws IOException, JRException {
         ReportServices rs = new ReportServices();
-        rs.generate(null);
+        //rs.generate(null);
 
     }
 

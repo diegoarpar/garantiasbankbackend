@@ -14,6 +14,7 @@ com/itec/services/SearchServices$TransferObject.class
 com/itec/services/GarantiasServices.class
 com/itec/oauth/CallServices.class
 com/itec/util/UTILS.class
+com/itec/util/MongoDbConnection.class
 com/itec/services/ReportServices.class
 com/itec/services/RegionalServices.class
 com/itec/oauth/UrlFactory.class
