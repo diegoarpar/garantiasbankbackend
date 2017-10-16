@@ -69,7 +69,7 @@ public class UploadServices {
         obj.put("fileName",fileDetail.getFileName());
         obj.put("internalName",fileId);
         obj.put("fechaCarga",new Date());
-        obj.put("caseFolder",new Date());
+        obj.put("caseFolder",o);
         obj.put("metadata",JSON.parse(metadata));
         obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
         obj.put("status","PENDIENTE");
