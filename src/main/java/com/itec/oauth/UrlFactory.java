@@ -15,7 +15,7 @@ public class UrlFactory {
 
     public static final String IS_VALID_TOKEN="isValidToken";
     public static final String GET_ROLES="getRoles";
-    public static final String INSERT_FILE="getCMSInserFile";
+    public static final String INSERT_FILE_CENTRAL="getCMSInserFile";
     public static final String AUTENTICATION="autentication";
     public static final String BATCHER_GET_REPORT="batcher";
     public static final String BATCHER_GET_NOT_GENERATED="batchernotgenerated";
@@ -36,7 +36,7 @@ public class UrlFactory {
 
             case IS_VALID_TOKEN: return new URL(ConfigurationApp.URLAUTENTICATION+"token"+query);
             case GET_ROLES: return new URL(ConfigurationApp.URLAUTENTICATION+"roles"+query);
-            case INSERT_FILE: return new URL(ConfigurationApp.URL_CMS+"FileToIndex/IndexId"+query);
+            case INSERT_FILE_CENTRAL: return new URL(ConfigurationApp.URL_CMS+"FileToIndex/Central/IndexId"+query);
             case BATCHER_GET_REPORT: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/retrivereports"+query);
             case BATCHER_GET_NOT_GENERATED: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/retrivereportsnotgenerated"+query);
             case BATCHER_SET_JOB: return new URL(ConfigurationApp.URL_BATCHER+"batcherservices/setjob"+query);
