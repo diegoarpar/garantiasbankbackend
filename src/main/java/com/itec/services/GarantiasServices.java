@@ -91,7 +91,7 @@ public class GarantiasServices {
     public  List<DBObject> getGarantias(@Context HttpServletRequest req) throws IOException {
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         UTILS.tryJson(criterial);
-        criterial=UTILS.getTenant(req,criterial);
+        UTILS.getTenant(req,criterial);
         return f.retrive(criterial,UTILS.COLLECTION_ARCHIVO);
     }
     @GET

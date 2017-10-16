@@ -61,11 +61,16 @@ public class UTILS {
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
                 if(pair.getKey().toString().equals("_id")){
-                    if(generateObjectid(pair.getValue().toString()).isPresent()){
+
 
                         obj.put(pair.getKey().toString(), generateObjectid(pair.getValue().toString()).get());
-                    }
-                }else
+
+                }else if(pair.getKey().toString().equals("json")&&((BasicDBObject)pair.getValue()).get("_id")!=null){
+
+                    obj.put("_id", generateObjectid(((BasicDBObject)pair.getValue()).get("_id").toString()));
+                }
+
+                else
                 obj.put(pair.getKey().toString(), pair.getValue());
             }
             criterial.clear();
@@ -116,12 +121,12 @@ public class UTILS {
                 Integer.parseInt(counter));
 
     }
-    public static Optional generateObjectid(String  objectId){
+    public static ObjectId generateObjectid(String  objectId){
        try{
-           return Optional.of(new ObjectId(objectId));
+           return new ObjectId(objectId);
        }catch (Exception e){
        }
-        return Optional.absent();
+        return null;
 
 
     }
