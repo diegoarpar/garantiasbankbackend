@@ -15,6 +15,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -66,6 +67,7 @@ public class UploadServices {
 
         }while(fm.retrive(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS).size()>0);
 
+        criterial.clear();
         BasicDBObject obj= new BasicDBObject();
         obj.put("fileName",fileDetail.getFileName());
         obj.put("internalName",fileId);
@@ -75,12 +77,14 @@ public class UploadServices {
         obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
         obj.put("status","PENDIENTE");
         obj.put("garid",o);
-        criterial.clear();
+        criterial.put("json",obj);
+        UTILS.getTenant(req,criterial);
+
 
         String uploadedFileLocation = ConfigurationApp.UPLOAD_FILE_PATH + fileId;
         UTILS.writeToFile(uploadedInputStream, uploadedFileLocation);
 
-        UTILS.getTenant(req,criterial);
+
         criterial2.put("json",obj);
 
 
@@ -93,6 +97,7 @@ public class UploadServices {
         criterial2.put("internalName", fileId);
         criterial2.put("metadata",JSON.parse(metadata));
         criterial2.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
+        UTILS.getTenant(req,criterial2);
 
         String rta ="ERROR";
         int cont=0;
@@ -102,7 +107,10 @@ public class UploadServices {
 
         }while (rta.equals("ERROR")&&cont<10);
 
-        if(rta.equals("ERROR")) return Response.serverError().build();
+        if(rta.equals("ERROR")){
+
+            return Response.serverError().build();
+        };
         fm.insert(criterial,UTILS.COLLECTION_ARCHIVO_DOCUMENTS);
 
         return Response.ok().build();

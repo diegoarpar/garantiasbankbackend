@@ -106,10 +106,12 @@ public class CallServices {
         } catch (MalformedURLException e) {
 
             e.printStackTrace();
+            return "ERROR";
 
         } catch (IOException e) {
 
             e.printStackTrace();
+            return "ERROR";
 
         }
         return  outputReturn;
