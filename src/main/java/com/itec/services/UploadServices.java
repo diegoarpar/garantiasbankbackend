@@ -69,6 +69,7 @@ public class UploadServices {
         obj.put("fileName",fileDetail.getFileName());
         obj.put("internalName",fileId);
         obj.put("fechaCarga",new Date());
+        obj.put("caseFolder",new Date());
         obj.put("metadata",JSON.parse(metadata));
         obj.put("path",ConfigurationApp.UPLOAD_FILE_PATH);
         obj.put("status","PENDIENTE");
@@ -86,6 +87,7 @@ public class UploadServices {
 
         criterial.clear();
         criterial.put("garid",o);
+        criterial.put("caseFolder",o);
         criterial.put("fileName", fileDetail.getFileName());
         criterial.put("internalName", fileId);
         criterial.put("metadata",JSON.parse(metadata));
