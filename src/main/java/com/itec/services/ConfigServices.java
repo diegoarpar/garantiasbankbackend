@@ -66,14 +66,8 @@ public class ConfigServices {
     @Path("/garantias-field")
     @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String insertGarantiasFiled(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial,criterialList);
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
             fm.insert(o, UTILS.COLLECTION_ARCHIVOS_DATOS);
@@ -114,14 +108,8 @@ public class ConfigServices {
     @Path("/garantias-parametricvalues")
     @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
     public String insertGarantiasParametricValues(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial,criterialList);
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
             fm.insert(o,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
@@ -130,7 +118,58 @@ public class ConfigServices {
         return  "FIRMANDO";
     }
 
+    /******SEARCH_FIELDS****/
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricsearch")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public List<DBObject> getSearchFields(@Context HttpServletRequest req) throws IOException {
+        criterial.clear();
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
+        return fm.retrive(criterial,UTILS.COLLECTION_PARAMETRIC_SEARCH);
+    }
+
+    @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricsearch/delete/")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public String removeSearchFields(@Context HttpServletRequest req) throws IOException {
+        criterial.clear();
+        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
+        criterial=UTILS.getTenant(req,criterial);
+        fm.delete(criterial,UTILS.COLLECTION_PARAMETRIC_SEARCH);
+        return "Elimiando";
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricsearch/post")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public List<DBObject> searchPost(@Context HttpServletRequest req) throws IOException {
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial,criterialList);
+        UTILS.getTenant(req,criterialList.get(0));
 
 
+        return fm.retrive(criterialList.get(0),UTILS.COLLECTION_PARAMETRIC_SEARCH);
+    }
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricsearch")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public String insertSearchFields(@Context HttpServletRequest req) throws IOException {
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            fm.insert(o,UTILS.COLLECTION_PARAMETRIC_SEARCH);
+        }
+
+        return  "FIRMANDO";
+    }
 
 }
