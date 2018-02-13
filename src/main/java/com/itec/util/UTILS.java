@@ -22,6 +22,7 @@ public class UTILS {
     public static final String COLLECTION_ARCHIVOS_DATOS = "archivo_fields";
     public static final String COLLECTION_ARCHIVOS_TRD = "archivo_trd";
     public static final String COLLECTION_ARCHIVO_PARAMETRICS_VALUES = "archivo_parametrics_values";
+    public static final String COLLECTION_PARAMETRIC_SEARCH= "archivo_parametrics_search";
     public static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
     public static final String COLLECTION_METADATA = "archivo_metadata";
