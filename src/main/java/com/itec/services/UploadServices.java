@@ -84,6 +84,7 @@ public class UploadServices {
 
         criterial.clear();
         criterial.put("garid",o);
+        criterial.put("caseFolder",o);
         criterial.put("fileName", fileDetail.getFileName());
         criterial.put("internalName", fileId);
         criterial.put("metadata",JSON.parse(metadata));
