@@ -85,7 +85,7 @@ public class DBMongo {
         }
 
         //BasicDBObject searchQuery2  = new BasicDBObject();
-        curs=collection.find(searchQuery2);
+        curs=collection.find(searchQuery2).limit(600);
 
         while(curs.hasNext()) {
                 DBObject o = curs.next();
@@ -96,7 +96,7 @@ public class DBMongo {
     public List<DBObject> getAll(DBCollection collection,MongoClient mongoClient, HashMap criterial){
         List<DBObject> data= new ArrayList<>();
         DBCursor curs;
-        curs=collection.find();
+        curs=collection.find().limit(600);
 
         while(curs.hasNext()) {
             DBObject o = curs.next();
