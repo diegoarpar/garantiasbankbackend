@@ -25,6 +25,7 @@ public class UTILS {
     public static final String COLLECTION_PARAMETRIC_SEARCH= "archivo_parametrics_search";
     public static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
+    public static final String COLLECTION_BODEGA = "archivo_regional_bodega";
     public static final String COLLECTION_METADATA = "archivo_metadata";
     public static final String COLLECTION_REPORT = "archivo_report";
     public static final String APPLICATION_NAME = "gar";

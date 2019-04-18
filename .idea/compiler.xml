@@ -13,4 +13,9 @@
       <module name="GarantiasBank" target="1.7" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="GarantiasBank" options="-endorseddirs $PROJECT_DIR$/target/endorsed" />
+    </option>
+  </component>
 </project>

@@ -5,7 +5,6 @@ import com.itec.util.UTILS;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.DuplicateKeyException;
 import com.mongodb.util.JSON;
 
 import javax.annotation.security.PermitAll;
@@ -24,9 +23,9 @@ import java.util.List;
  * Created by iTech on 26/03/2017.
  */
 
-@Path("/garantias/regional")
+@Path("/garantias/bodega")
 @Produces(MediaType.APPLICATION_JSON)
-public class RegionalServices {
+public class BodegaServices {
 
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
@@ -38,7 +37,7 @@ public class RegionalServices {
         criterial.clear();
         criterial= UTILS.fillCriterialFromString(req.getQueryString(),criterial);
         criterial=UTILS.getTenant(req,criterial);
-            return fm.retrive(criterial,UTILS.COLLECTION_REGIONAL);
+            return fm.retrive(criterial,UTILS.COLLECTION_BODEGA);
 
     }
 
@@ -50,7 +49,7 @@ public class RegionalServices {
     public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
         criterial.clear();
         criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        fm.delete(criterial, UTILS.COLLECTION_REGIONAL);
+        fm.delete(criterial, UTILS.COLLECTION_BODEGA);
         return "Elimiando";
     }
     @POST
@@ -76,12 +75,12 @@ public class RegionalServices {
 
                 aux.put("json",obj);
             try{
-                fm.delete(aux,UTILS.COLLECTION_REGIONAL);
+                fm.delete(aux,UTILS.COLLECTION_BODEGA);
                 obj=null;
             }catch (Exception e){
                 e.printStackTrace();
             }
-                fm.insert(o, UTILS.COLLECTION_REGIONAL);
+                fm.insert(o, UTILS.COLLECTION_BODEGA);
         }
         return  "Actualizado";
     }
