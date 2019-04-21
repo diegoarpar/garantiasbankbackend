@@ -30,14 +30,15 @@ public class BodegaServices {
     FactoryMongo fm = new FactoryMongo();
     HashMap<String, String> criterial= new HashMap<>();
     ArrayList<HashMap> criterialList= new ArrayList<>();
-    @GET
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
+    @Path("/retrieve")
     public List<DBObject> get(@Context HttpServletRequest req) throws IOException {
-        criterial.clear();
-        criterial= UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        criterial=UTILS.getTenant(req,criterial);
-            return fm.retrive(criterial,UTILS.COLLECTION_BODEGA);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o,UTILS.COLLECTION_BODEGA);
 
     }
 
@@ -84,4 +85,106 @@ public class BodegaServices {
         }
         return  "Actualizado";
     }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/insertContainer")
+    public String insertContenedor(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        BasicDBObject obj;
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            HashMap aux = new HashMap();
+            aux=UTILS.getTenant(req,aux);
+            obj = new BasicDBObject();
+            obj.append("key",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("key"));
+            obj.append("storage",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("storage"));
+            obj.append("code",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("code"));
+
+            aux.put("json",obj);
+            try{
+                fm.delete(aux,UTILS.COLLECTION_BODEGA_CONTENEDORES);
+                obj=null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            fm.insert(o, UTILS.COLLECTION_BODEGA_CONTENEDORES);
+
+
+        }
+        return  "Actualizado";
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/retrieveContainer")
+    public List<DBObject> getContainer(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o,UTILS.COLLECTION_BODEGA_CONTENEDORES);
+
+    }
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/insertContainerUbication")
+    public String insertContenedorUbicacion(@Context HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String read;
+        while((read=br.readLine()) != null) {
+            stringBuilder.append(read);
+        }
+        br.close();
+        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        BasicDBObject obj;
+
+        obj = new BasicDBObject();
+        obj.append("container",((BasicDBObject) JSON.parse((criterialList.get(0).get("json").toString()))).get("container"));
+        HashMap aux = new HashMap();
+        aux=UTILS.getTenant(req,aux);
+        aux.put("json",obj);
+        try{
+            fm.delete(aux,UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
+            obj=null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            aux=UTILS.getTenant(req,aux);
+
+            fm.insert(o, UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
+
+
+        }
+        return  "Actualizado";
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/retrieveContainerUbication")
+    public List<DBObject> getContainerUbicacion(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o,UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
+
+    }
+
+
 }
