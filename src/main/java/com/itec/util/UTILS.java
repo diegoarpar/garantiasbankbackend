@@ -28,12 +28,13 @@ public class UTILS {
     public static final String COLLECTION_BODEGA = "archivo_regional_bodega";
     public static final String COLLECTION_BODEGA_CONTENEDORES = "archivo_regional_bodega_contenedores";
     public static final String COLLECTION_BODEGA_CONTENEDORES_UBICACION = "archivo_regional_bodega_contenedores_ubicacion";
+    public static final String COLLECTION_BODEGA_CONTENEDORES_PRESTAMO = "archivo_regional_bodega_contenedores_prestamo";
     public static final String COLLECTION_METADATA = "archivo_metadata";
     public static final String COLLECTION_REPORT = "archivo_report";
     public static final String APPLICATION_NAME = "gar";
 
 
-    public static ArrayList<HashMap> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap> criterialList){
+    private static ArrayList<HashMap> fillCriterialListFromDBOBject(BasicDBList dbList, HashMap criterial, ArrayList<HashMap> criterialList){
         criterialList.clear();
 
         for(String s : dbList.keySet()){

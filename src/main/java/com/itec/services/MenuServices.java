@@ -57,14 +57,7 @@ public class MenuServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public String insert(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
                 HashMap aux = new HashMap();

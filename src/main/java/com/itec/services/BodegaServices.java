@@ -58,14 +58,7 @@ public class BodegaServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public String insert(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject obj;
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
@@ -92,14 +85,8 @@ public class BodegaServices {
     @PermitAll
     @Path("/insertContainer")
     public String insertContenedor(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject obj;
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
@@ -142,14 +129,7 @@ public class BodegaServices {
     @PermitAll
     @Path("/insertContainerUbication")
     public String insertContenedorUbicacion(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject obj;
 
         obj = new BasicDBObject();
@@ -174,6 +154,22 @@ public class BodegaServices {
         }
         return  "Actualizado";
     }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/insertContainerPrestamo")
+    public String insertContenedorPrestamo(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            fm.insert(o, UTILS.COLLECTION_BODEGA_CONTENEDORES_PRESTAMO);
+
+        }
+        return  "Actualizado";
+    }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
@@ -186,5 +182,16 @@ public class BodegaServices {
 
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Path("/retrieveContainerPrestamo")
+    public List<DBObject> getContainerPrestamo(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        HashMap o=criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o,UTILS.COLLECTION_BODEGA_CONTENEDORES_PRESTAMO);
+
+    }
 
 }

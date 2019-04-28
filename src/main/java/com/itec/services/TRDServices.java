@@ -54,14 +54,7 @@ public class TRDServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
     public String insert(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
             fm.insert(o, UTILS.COLLECTION_ARCHIVOS_TRD);
@@ -76,14 +69,7 @@ public class TRDServices {
     @PermitAll
     @Path("/retrive")
     public List<DBObject> retrivePost(@Context HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-        String read;
-        while((read=br.readLine()) != null) {
-            stringBuilder.append(read);
-        }
-        br.close();
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(stringBuilder.toString()),criterial, criterialList);
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         HashMap o=criterialList.get(0);
             o=UTILS.getTenant(req,o);
             return fm.retrive(o, UTILS.COLLECTION_ARCHIVOS_TRD);

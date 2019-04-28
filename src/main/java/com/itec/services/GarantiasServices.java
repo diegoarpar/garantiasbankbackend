@@ -34,15 +34,13 @@ public class GarantiasServices {
     FactoryMongo f = new FactoryMongo();
     HashMap<String, DBObject> criterial= new HashMap<>();
     ArrayList<HashMap> criterialList= new ArrayList<>();
-    String postString="";
      @RolesAllowed("ADMIN,ADMIN_BODEGA,USER_BODEGA")
      @POST
      @Produces(MediaType.APPLICATION_JSON)
      @Path("/insertGarantias")
 
         public String insertGarantias(@Context HttpServletRequest req) throws IOException {
-         postString=UTILS.fillStringFromRequestPost(req);
-         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
+         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
 
 
          for(HashMap o : criterialList){
@@ -57,8 +55,7 @@ public class GarantiasServices {
      @Path("/updateGarantias")
      @PermitAll
     public String updateGarantias2(@Context HttpServletRequest req) throws IOException {
-         postString=UTILS.fillStringFromRequestPost(req);
-         criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
+         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
 
          for(HashMap o : criterialList){
              o=UTILS.getTenant(req,o);
@@ -73,9 +70,7 @@ public class GarantiasServices {
     @Path("/insertGarantias")
     @PermitAll
     public String updateGarantias(@Context HttpServletRequest req,@PathParam("id") String id) throws IOException {
-        postString=UTILS.fillStringFromRequestPost(req);
-        criterialList=UTILS.fillCriterialListFromDBOBject((BasicDBList) JSON.parse(postString.toString()),criterial, criterialList);
-
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
             f.update(o,UTILS.COLLECTION_ARCHIVO);
