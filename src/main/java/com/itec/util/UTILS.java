@@ -26,6 +26,7 @@ public class UTILS {
     public static final String COLLECTION_ARCHIVO_DOCUMENTS = "archivo_documents";
     public static final String COLLECTION_REGIONAL = "archivo_regional_recepcion";
     public static final String COLLECTION_BODEGA = "archivo_regional_bodega";
+    public static final String COLLECTION_PRESTAMO = "archivo_regional_prestamo";
     public static final String COLLECTION_BODEGA_CONTENEDORES = "archivo_regional_bodega_contenedores";
     public static final String COLLECTION_BODEGA_CONTENEDORES_UBICACION = "archivo_regional_bodega_contenedores_ubicacion";
     public static final String COLLECTION_BODEGA_CONTENEDORES_PRESTAMO = "archivo_regional_bodega_contenedores_prestamo";

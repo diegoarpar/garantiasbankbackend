@@ -56,6 +56,7 @@ public class Garantias extends  Application<ConfigurationApp> {
         e.jersey().register(GZipEncoder.class);
         e.jersey().register(EncodingFilter.class);
         e.jersey().register(BodegaServices.class);
+        e.jersey().register(PrestamoServices.class);
 
 
         e.jersey().register(new AuthDynamicFeature(
