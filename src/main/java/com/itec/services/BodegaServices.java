@@ -182,16 +182,6 @@ public class BodegaServices {
 
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @PermitAll
-    @Path("/retrieveContainerPrestamo")
-    public List<DBObject> getContainerPrestamo(@Context HttpServletRequest req) throws IOException {
-        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
-        HashMap o=criterialList.get(0);
-        o=UTILS.getTenant(req,o);
-        return fm.retrive(o,UTILS.COLLECTION_BODEGA_CONTENEDORES_PRESTAMO);
 
-    }
 
 }
