@@ -35,7 +35,7 @@ public class PrestamoServices {
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         HashMap o=criterialList.get(0);
         o=UTILS.getTenant(req,o);
-        return fm.retrive(o,UTILS.COLLECTION_BODEGA);
+        return fm.retrive(o,UTILS.COLLECTION_PRESTAMO);
 
     }
 
@@ -54,7 +54,8 @@ public class PrestamoServices {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
-    public String insert(@Context HttpServletRequest req) throws IOException {
+    @Path("/remove")
+    public String remove(@Context HttpServletRequest req) throws IOException {
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject obj;
         for(HashMap o : criterialList){
@@ -71,7 +72,33 @@ public class PrestamoServices {
             }catch (Exception e){
                 e.printStackTrace();
             }
-                fm.insert(o, UTILS.COLLECTION_PRESTAMO);
+        }
+        return  "Actualizado";
+    }
+
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
+    public String insert(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        BasicDBObject obj;
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            HashMap aux = new HashMap();
+            aux=UTILS.getTenant(req,aux);
+            obj = new BasicDBObject();
+            obj.append("key",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("key"));
+
+            aux.put("json",obj);
+            try{
+                fm.delete(aux,UTILS.COLLECTION_PRESTAMO);
+                obj=null;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            fm.insert(o, UTILS.COLLECTION_PRESTAMO);
         }
         return  "Actualizado";
     }
