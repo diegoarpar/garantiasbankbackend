@@ -39,17 +39,7 @@ public class PrestamoServices {
 
     }
 
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
-    @PermitAll
-    public String remove(@Context HttpServletRequest req, @PathParam("id") String id) throws IOException {
-        criterial.clear();
-        criterial=UTILS.fillCriterialFromString(req.getQueryString(),criterial);
-        fm.delete(criterial, UTILS.COLLECTION_PRESTAMO);
-        return "Elimiando";
-    }
+
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,15 +50,9 @@ public class PrestamoServices {
         BasicDBObject obj;
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
-                HashMap aux = new HashMap();
-                aux=UTILS.getTenant(req,aux);
-                 obj = new BasicDBObject();
-                 obj.append("key",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("key"));
-
-                aux.put("json",obj);
             try{
-                fm.delete(aux,UTILS.COLLECTION_PRESTAMO);
-                obj=null;
+                fm.delete(o,UTILS.COLLECTION_PRESTAMO);
+
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -90,14 +74,7 @@ public class PrestamoServices {
             aux=UTILS.getTenant(req,aux);
             obj = new BasicDBObject();
             obj.append("key",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("key"));
-
             aux.put("json",obj);
-            try{
-                fm.delete(aux,UTILS.COLLECTION_PRESTAMO);
-                obj=null;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             fm.insert(o, UTILS.COLLECTION_PRESTAMO);
         }
         return  "Actualizado";

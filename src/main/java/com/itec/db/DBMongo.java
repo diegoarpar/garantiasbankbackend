@@ -53,13 +53,12 @@ public class DBMongo {
     }
     public String removeGarantias(DBCollection collection,MongoClient mongoClient, HashMap criterial){
 
-        List<DBObject> data= new ArrayList<>();
         BasicDBObject searchQuery2  = new BasicDBObject();
         Iterator it = criterial.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-
             searchQuery2=(BasicDBObject)JSON.parse(pair.getValue().toString());
+
         }
 
         collection.remove(searchQuery2);

@@ -142,6 +142,24 @@ public class ConfigServices {
         fm.delete(criterial,UTILS.COLLECTION_PARAMETRIC_SEARCH);
         return "Elimiando";
     }
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricvalues/eliminarpost")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public String removeSearchFieldsPost(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        BasicDBObject obj;
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            try{
+                fm.delete(o,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return  "Actualizado";
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
