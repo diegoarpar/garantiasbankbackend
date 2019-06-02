@@ -218,4 +218,19 @@ public class PrestamoServices {
 
     }
 
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/updatePrestamo")
+    @PermitAll
+    public String update(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            fm.update(o,UTILS.COLLECTION_PRESTAMO);
+        }
+        return  "FIRMANDO";
+    }
+
 }
