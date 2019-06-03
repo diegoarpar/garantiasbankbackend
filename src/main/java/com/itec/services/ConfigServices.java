@@ -147,7 +147,7 @@ public class ConfigServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/garantias-parametricvalues/eliminarpost")
     @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
-    public String removeSearchFieldsPost(@Context HttpServletRequest req) throws IOException {
+    public String removeParametricFieldsPost(@Context HttpServletRequest req) throws IOException {
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
         BasicDBObject obj;
         for(HashMap o : criterialList){
@@ -160,6 +160,21 @@ public class ConfigServices {
         }
         return  "Actualizado";
     }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/garantias-parametricvalues/retrievepost")
+    @RolesAllowed({"ADMIN,CONFIG_BODEGA"})
+    public List<DBObject> showParametricFieldsPost(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+        BasicDBObject obj;
+        HashMap o = criterialList.get(0);
+        o=UTILS.getTenant(req,o);
+        return fm.retrive(o,UTILS.COLLECTION_ARCHIVO_PARAMETRICS_VALUES);
+    }
+
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

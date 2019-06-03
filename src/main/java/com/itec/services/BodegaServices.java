@@ -90,23 +90,7 @@ public class BodegaServices {
         BasicDBObject obj;
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
-            HashMap aux = new HashMap();
-            aux=UTILS.getTenant(req,aux);
-            obj = new BasicDBObject();
-            obj.append("key",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("key"));
-            obj.append("storage",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("storage"));
-            obj.append("code",((BasicDBObject) JSON.parse((o.get("json").toString()))).get("code"));
-
-            aux.put("json",obj);
-            try{
-                fm.delete(aux,UTILS.COLLECTION_BODEGA_CONTENEDORES);
-                obj=null;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             fm.insert(o, UTILS.COLLECTION_BODEGA_CONTENEDORES);
-
-
         }
         return  "Actualizado";
     }
