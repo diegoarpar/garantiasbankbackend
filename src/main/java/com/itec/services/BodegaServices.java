@@ -114,29 +114,27 @@ public class BodegaServices {
     @Path("/insertContainerUbication")
     public String insertContenedorUbicacion(@Context HttpServletRequest req) throws IOException {
         criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
-        BasicDBObject obj;
-
-        obj = new BasicDBObject();
-        obj.append("container",((BasicDBObject) JSON.parse((criterialList.get(0).get("json").toString()))).get("container"));
-        HashMap aux = new HashMap();
-        aux=UTILS.getTenant(req,aux);
-        aux.put("json",obj);
-        try{
-            fm.delete(aux,UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
-            obj=null;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
         for(HashMap o : criterialList){
             o=UTILS.getTenant(req,o);
-            aux=UTILS.getTenant(req,aux);
-
             fm.insert(o, UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
-
-
         }
         return  "Actualizado";
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/updateContainerUbication")
+    @PermitAll
+    public String updateContainerUbicacion(@Context HttpServletRequest req) throws IOException {
+        criterialList=UTILS.fillCriterialListFromDBOBject(req,criterial, criterialList);
+
+        for(HashMap o : criterialList){
+            o=UTILS.getTenant(req,o);
+            fm.update(o,UTILS.COLLECTION_BODEGA_CONTENEDORES_UBICACION);
+        }
+        return  "FIRMANDO";
     }
 
     @POST
