@@ -9,6 +9,7 @@ com/itec/services/MetadataServices.class
 com/itec/db/DBMongo.class
 com/itec/pojo/Token.class
 com/itec/services/MenuServices.class
+com/itec/services/PrestamoServices.class
 com/itec/db/ProbarJson.class
 com/itec/services/TRDServices.class
 com/itec/oauth/Autenticator.class

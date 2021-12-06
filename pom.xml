@@ -24,6 +24,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
     </repositories>
 
     <dependencies>
@@ -38,6 +39,11 @@
 		<artifactId>mongo-java-driver</artifactId>
 		<version>${mongo.version}</version>
 	</dependency>
+    <dependency>
+        <groupId>org.olap4j</groupId>
+        <artifactId>olap4j-xmlaserver</artifactId>
+        <version>1.2.0</version>
+    </dependency>
      <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
