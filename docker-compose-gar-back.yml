@@ -3,6 +3,6 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: DockerfileGarantiasBankBack
     ports:
       - "9999:9999"
