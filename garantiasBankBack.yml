@@ -1,0 +1,70 @@
+template: Hello, %s!
+filePath: /home/itec/Documents/temp/
+reportPath: /home/itec/Documents/temp/
+appUser: diego
+appPassword: 66695246e3731fbfb72e3e2370c51f4ffa90ba5f37fe2bfe6b3576346e7402ed
+databaseuser: certi
+databasepass: certi123
+databasename: garantiasdb
+databasurlserver: localhost
+urlAutentication: http://localhost:2022/autentication/
+urlCMS: http://localhost:2024/CMS/
+
+defaultName: ${DW_DEFAULT_NAME:-Stranger}
+
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 9999
+  #  - type: https
+  #    port: 8443
+ #     keyStorePath: example.keystore
+ #     keyStorePassword: example
+ #     validateCerts: false
+# this requires the alpn-boot library on the JVM's boot classpath
+#    - type: spdy3
+#      port: 8445
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 9998
+ #   - type: https
+ #     port: 8444
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+ #     validateCerts: false
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.example.app: DEBUG
+
+    # Redirects SQL logs to a separate file
+    org.hibernate.SQL:
+      level: DEBUG
+
+# Logback's Time Based Rolling Policy - archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
+# Logback's Size and Time Based Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+# Logback's Fixed Window Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%i.log.gz
+
+ # appenders:
+#    - type: console
+#    - type: file
+#      threshold: INFO
+#      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+#      currentLogFilename: /tmp/application.log
+#      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+#      archivedFileCount: 7
+#      timeZone: UTC
+ #     maxFileSize: 10MB
+
