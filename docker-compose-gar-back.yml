@@ -1,8 +1,19 @@
 version: "3.9"
 services:
   web:
+    container_name: gar-services
     build:
       context: .
       dockerfile: DockerfileGarantiasBankBack
     ports:
       - "9999:9999"
+    networks:
+      - db
+      - auth
+networks:
+  db:
+    external:
+      name: db_default
+  auth:
+    external:
+      name: auth_default
